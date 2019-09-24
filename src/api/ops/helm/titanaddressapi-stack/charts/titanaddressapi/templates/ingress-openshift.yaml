@@ -1,0 +1,22 @@
+{{- if .Values.global.ingress.openshift.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: titanaddressapi
+spec:
+  host: {{ .Values.ingress.host }}
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: titanaddressapi
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    host: {{ .Values.ingress.host }}
+    routerName: router
+    wildcardPolicy: None
+{{- end }}

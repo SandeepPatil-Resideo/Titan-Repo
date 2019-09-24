@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logging-titanaddressapi
+data:
+  output_elasticsearch_hosts: "{{ .Values.global.elasticsearch.protocol | lower }}://{{ .Values.global.elasticsearch.host}}:{{ .Values.global.elasticsearch.port }}"
+
+{{- if .Values.global.elasticsearch.validateCertificate -}}
+  output_elasticsearch_ssl_verification_mode: full
+{{- else }}
+  output_elasticsearch_ssl_verification_mode: none
+{{- end }}
+
+  filebeat_inputs_fields_siteId: "{{ .Values.global.siteId }}"
+  filebeat_inputs_fields_environmentId: "{{ .Values.global.environmentId }}"
+  filebeat_inputs_fields_serviceId: "{{ template "titanaddressapi.name" . }}"
