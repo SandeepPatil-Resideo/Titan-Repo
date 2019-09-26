@@ -45,7 +45,7 @@ pipeline {
         environmentName_dev = 'Dev'
         environmentName_qa = 'QA'
 
-        // SonarQube Credentials
+        // SonarQube Credentials ..
         sonarQubeLoginToken= credentials("SONARQUBE_TOKEN")
         blackDuck_Credentials=credentials("BLACKDUCK_CREDENTIALS")
         cred_protecode_Credentials=credentials("PROTECODE_CREDENTIALS")
