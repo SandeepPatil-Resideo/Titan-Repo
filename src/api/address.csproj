@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>TitanTemplate.titanaddressapi</RootNamespace>
-    <AssemblyName>titan-address-api</AssemblyName>
+    <AssemblyName>address</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

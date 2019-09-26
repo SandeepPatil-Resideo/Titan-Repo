@@ -1,0 +1,467 @@
+pipeline {
+    agent {label 'titan'}
+    parameters {
+        choice(name: 'DeployEnv', choices: ['Dev', 'QA', 'Stage', 'Production'], description: 'Pick which environment the deployment needs to be done to')
+        booleanParam(name: 'Execute_BuildCode', defaultValue: true, description: 'Execute_BuildCode - true or false')
+        booleanParam(name: 'Execute_UnitTests', defaultValue: true, description: 'Execute_UnitTests - true or false')
+        booleanParam(name: 'Execute_DockerImageCreation', defaultValue: true, description: 'Execute_DockerImageCreation - true or false')
+        booleanParam(name: 'Execute_StaticCodeAnalysis', defaultValue: true, description: 'Execute_StaticCodeAnalysis - true or false')
+        booleanParam(name: 'Execute_BinaryScan', defaultValue: true, description: 'Execute_BinaryScan - true or false')
+        booleanParam(name: 'Execute_BlackDuck', defaultValue: false, description: 'Execute_BlackDuck - true or false')
+        booleanParam(name: 'Execute_PublishImage', defaultValue: true, description: 'Execute_PublishImage - true or false')
+        booleanParam(name: 'Execute_ImageDeployment', defaultValue: true, description: 'Execute_ImageDeployment - true or false')
+        booleanParam(name: 'Execute_SendEmailStatus', defaultValue: true, description: 'Execute_SendEmailStatus - true or false')
+    }
+    environment {
+        // // // VARIABLES TO MODIFY - BEGIN // // //
+        PROJECT_PATH = "${WORKSPACE}/src/api"
+        PROJECT_FILE_NAME = "${PROJECT_PATH}/address.csproj"
+        DOCKER_FILE_PATH = "${PROJECT_PATH}"
+        DOTNETPUBLISH_RUNTIME = "linux-musl-x64"
+        DOTNET_BUILD_OUTPUT = "${PROJECT_PATH}/published"
+        UNIT_TEST_PATH = "${WORKSPACE}/test/unitTest"
+		UNITTEST_REPORT = "${UNIT_TEST_PATH}/TestResults/Titan.UFC.Address.Tests.trx"
+        OPENCOVER_COVERAGEREPORT = "${UNIT_TEST_PATH}/TestResults/Titan.UFC.Address.Tests.OpenCover.xml"
+        LINE_COVERAGE_THRESHOLD = "0"
+		CODE_COVERAGE_EXCLUSIONS = "[xunit.runner.utility.netcoreapp10]*%2c[xunit.runner.visualstudio.dotnetcore.testadapter]*%2c[xunit.runner.reporters.netcoreapp10]*%2c[*]*Program*%2c[*]*Startup*%2c[*]*SerilogFilterPropertiesEnricher*"
+        CODE_COVERAGE_INCLUSIONS = "*.*"
+        KUBERNETES_YAML_FILE = "${WORKSPACE}/address.yml"
+        sonarQubeProjectKey='TITSMS'
+        sonarQubeComponentId='AW1iA7VgnrOJ2TIcW0i3'
+        sonarQubeProjectName='TitanUFC-Pro-Address'
+        CONTAINER_IMAGE_NAME = "titan-ufc-address"
+        BLACKDUCK_PUREPROJECT = ""
+        protecodeSC_ApplicationToUpload = "${WORKSPACE}/build/titan-ufc-address"
+        // // // VARIABLES TO MODIFY - END // // //
+        PROTECODESC_GROUP = "${env.glob_EnvVar_Titan_UFC_ProtecodeSC_Group}"
+        GENERIC_POD_NAME = "${CONTAINER_IMAGE_NAME}"
+        DEVOPS_LIBRARY_PATH = "${WORKSPACE}/build/resideo_devopslibrary"
+        BUILD_TASK_PATH = "${DEVOPS_LIBRARY_PATH}/Sources/Tasks"
+        BUILD_TOOLS_SOURCE_PATH = "${WORKSPACE}/../../DevOps_BuildTools"
+        BUILD_TOOLS_PATH_IN_WORKSPACE = "${WORKSPACE}/DevOps/BuildTools"        
+        cred_DevOpsGitRepo_SshUrl = credentials("DevOpsGitRepo_SshUrl")
+        CONTAINER_TAG = "${BUILD_NUMBER}"
+        PRESENT_PATH = pwd()
+        environmentName_dev = 'Dev'
+        environmentName_qa = 'QA'
+
+        // SonarQube Credentials
+        sonarQubeLoginToken= credentials("SONARQUBE_TOKEN")
+        blackDuck_Credentials=credentials("BLACKDUCK_CREDENTIALS")
+        cred_protecode_Credentials=credentials("PROTECODE_CREDENTIALS")
+        sonarQubeProjectVersion="${BUILD_VERSION}"
+        sonarQubeTotalIssuesThreshold=100
+        sonarQubeBlockerIssuesThreshold=-1
+        sonarQubeCriticalIssuesThreshold=-1 
+        sonarQubeMajorIssuesThreshold=-1
+        sonarQubeMinorIsuesThreshold=-1
+        sonarQubeInfoIssuesThreshold=-1
+        
+        // Loading Jenkins Credentials
+        cred_dockerIoRegistry = credentials("cred_dockerIoRegistry")
+        cred_azTenantId = credentials("Az_TenantID_Honeywell")
+        // DEV
+        cred_azServicePrincipal_dev = credentials("Titan_ServicePrincipal_Dev")
+        cred_acr_url_dev = credentials("titan_acr_dev_url")
+        cred_azSubscriptionId_dev = credentials("Titan_azSubscriptionId_dev")
+        cred_AzAKS_Cluster_RG_dev = credentials("titan_aks_rg_dev")
+        cred_AzAKS_Cluster_Name_dev = credentials("titan_aks_clustername_dev")
+        environmentTag_dev='dev'
+        // QA
+        cred_azServicePrincipal_qa = credentials("Titan_ServicePrincipal_qa")
+        cred_acr_url_qa = credentials("titan_acr_qa_url")
+        cred_azSubscriptionId_qa = credentials("Titan_azSubscriptionId_qa")
+        cred_AzAKS_Cluster_RG_qa = credentials("titan_aks_rg_qa")
+        cred_AzAKS_Cluster_Name_qa = credentials("titan_aks_clustername_qa")
+        environmentTag_qa='qa'
+    }
+    stages {
+        stage('Code Checkout') {
+            steps {
+                script {
+                   echo "@@@@ Code Checkout @@@@" 
+                    def BuildStage_StdOut = sh(script: """
+                        echo "GIT CLONE START"
+                        sudo rm -rf ${DEVOPS_LIBRARY_PATH}
+                        git clone ${cred_DevOpsGitRepo_SshUrl} ${DEVOPS_LIBRARY_PATH}
+                        echo "GIT CLONE END"
+                    """, returnStdout: true)
+                    echo BuildStage_StdOut
+                }
+            }
+        }    
+        stage('Build Env Setup') {
+            steps {
+                script {
+                    echo "@@@@ Build Env Setup @@@@"
+                    def BuildStage_StdOut = sh(script: """
+                        #!/usr/bin/env bash
+                        source ~/.bash_profile
+                        echo "Change to Workspace to Build Library"
+                        cd "${BUILD_TASK_PATH}"
+                        python tasks.py -p "${WORKSPACE}" \
+                        --type DevOps \
+                        --task 'BuildToolsSetup' \
+                        --buildToolsSourcePath "${BUILD_TOOLS_SOURCE_PATH}" \
+                        --buildToolsPathInWorkspace "${BUILD_TOOLS_PATH_IN_WORKSPACE}"
+                    """, returnStdout: true)
+                    echo BuildStage_StdOut
+                }
+            }
+        }
+        stage('Build Code') {
+            steps {
+                script {
+                    if(params.Execute_BuildCode) {                    
+                        def BuildStage_StdOut = sh(script: """
+                            echo "Build Code"
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Change to Workspace to Build Library"
+                            cd "${PROJECT_PATH}"
+                            sudo rm -rf "${PROJECT_PATH}/published"
+                            python ${BUILD_TASK_PATH}/tasks.py -p "${PROJECT_PATH}" --type "generic" --task "executeCmd" --genericCmd "dotnet publish ${PROJECT_FILE_NAME} --self-contained --runtime "${DOTNETPUBLISH_RUNTIME}" -c release -o ./published"
+                        """, returnStdout: true)
+                        echo BuildStage_StdOut
+                    } else {
+                        echo "The parameter 'params.Execute_DockerImageCreation' is set to false"
+                    }
+                }
+            }
+        }           
+       stage('Unit Test Execution') {
+            steps {
+                script {
+                    if(params.Execute_UnitTests) {
+                        def BuildStage_StdOut = sh(script: """
+                            if [ "${params.DeployEnv}" == "${params.DeployEnv}" ]
+                            #if [ "${params.DeployEnv}" == "NO RUN" ]
+                            then
+                                echo "Build Code"
+                                #!/usr/bin/env bash
+                                source ~/.bash_profile
+                                # Removing Unit Test results if they execute before execution Begins - There might be other instances presend for BlackDuck
+                                find ${WORKSPACE} -name '*.trx' -delete
+                                find ${WORKSPACE} -name '*.CoverageReport.xml' -delete
+                                echo "Change to Workspace to Build Library"
+                                cd "${BUILD_TASK_PATH}"
+                                python tasks.py -p "${WORKSPACE}" \
+                                --type dotnet \
+                                --task 'test' \
+                                --buildBeforeTest True \
+                                --testReport_Format 'trx' \
+                                --collectCoverage 'true' \
+                                --CoverletOutputFormat 'cobertura' \
+                                --CodeCoverageExclude '[*Tests?]*' \
+                                --CodeCoverageInclude '[*]*' \
+                                --dotNetTestPath "${UNIT_TEST_PATH}" \
+                                --lineCvgPercTreshold ${LINE_COVERAGE_THRESHOLD}
+                            fi
+                        """, returnStdout: true)
+                        echo BuildStage_StdOut
+                    } else {
+                        echo "The parameter 'params.Execute_UnitTests' is set to false"
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    if(params.Execute_DockerImageCreation) {
+                        def BuildDocImg_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Build Docker Image"
+                            if [ "${params.DeployEnv}" == "${environmentName_dev}" ]
+                            then
+                                echo "Storing Docker Image to the Registry ${cred_acr_url_dev}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "docker" --task "buildImage" --DockerFilePath "${DOCKER_FILE_PATH}" --DockerRegUsername "${cred_dockerIoRegistry_USR}" --DockerRegPwd "${cred_dockerIoRegistry_PSW}" --DockerImageTag "${cred_acr_url_dev}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}" --DockerRegistryServer "https://index.docker.io/v1/"
+                            elif [ "${params.DeployEnv}" == "${environmentName_qa}" ]
+                            then
+                                echo "Storing Docker Image to the Registry ${cred_acr_url_qa}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "docker" --task "buildImage" --DockerFilePath "${DOCKER_FILE_PATH}" --DockerRegUsername "${cred_dockerIoRegistry_USR}" --DockerRegPwd "${cred_dockerIoRegistry_PSW}" --DockerImageTag "${cred_acr_url_qa}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}" --DockerRegistryServer "https://index.docker.io/v1/"
+                            fi
+                        """, returnStdout: true)
+                        echo BuildDocImg_StdOut
+                    } else {
+                        echo "The parameter 'params.Execute_DockerImageCreation' is set to false"
+                    }
+                }
+            }
+        }               
+        stage('Static Code Analysis Execution') {
+            steps {
+                script {
+                    if(params.Execute_StaticCodeAnalysis) {
+                        def StaticCode_StdOut = sh(script: """
+                            echo "Static Code"
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Removing Unit Test results if they execute before execution Begins - There might be other instances presend for BlackDuck"
+                            find ${WORKSPACE} -name '*.opencover.xml' -delete
+                            echo "Change to Workspace to Build Library"
+                            cd "${BUILD_TASK_PATH}"
+                            if [ "${params.Execute_UnitTests}"]
+                            then
+                                python tasks.py -p "${WORKSPACE}" \
+                                --type dotnet \
+                                --task 'test' \
+                                --buildBeforeTest True \
+                                --testReport_Format 'trx' \
+                                --collectCoverage 'true' \
+                                --CoverletOutputFormat 'opencover' \
+                                --CodeCoverageExclude '[*Tests?]*' \
+                                --CodeCoverageInclude '[*]*' \
+                                --dotNetTestPath "${UNIT_TEST_PATH}" \
+                                --lineCvgPercTreshold ${LINE_COVERAGE_THRESHOLD}
+                            fi
+
+                            echo "Change to Workspace to Build Library"
+                            cd "${BUILD_TASK_PATH}"
+                            if [ "${params.Execute_UnitTests}"]
+                            then
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${PROJECT_PATH}" \
+                                --type dotnet \
+                                --task "sonarquberun" \
+                                --buildToolsPathInWorkspace "${BUILD_TOOLS_PATH_IN_WORKSPACE}" \
+                                --sonarQubeScanBeginEnd "begin" \
+                                --sonarQubeLoginToken "${sonarQubeLoginToken}" \
+                                --sonarQubeProjectKey "${sonarQubeProjectKey}" \
+                                --sonarQubeProjectName "${sonarQubeProjectName}" \
+                                --sonarQubeProjectVersion "${CONTAINER_TAG}" \
+                                --sonarQubeCodeCoverageReport "${OPENCOVER_COVERAGEREPORT}"
+                            else
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${PROJECT_PATH}" \
+                                --type dotnet \
+                                --task "sonarquberun" \
+                                --buildToolsPathInWorkspace "${BUILD_TOOLS_PATH_IN_WORKSPACE}" \
+                                --sonarQubeScanBeginEnd "begin" \
+                                --sonarQubeLoginToken "${sonarQubeLoginToken}" \
+                                --sonarQubeProjectKey "${sonarQubeProjectKey}" \
+                                --sonarQubeProjectName "${sonarQubeProjectName}" \
+                                --sonarQubeProjectVersion "${CONTAINER_TAG}"
+                            fi
+                            python ${BUILD_TASK_PATH}/tasks.py -p "${PROJECT_PATH}" --type "generic" --task "executeCmd" --genericCmd "dotnet publish ${PROJECT_FILE_NAME} --self-contained --runtime "${DOTNETPUBLISH_RUNTIME}" -c release -o ./published"                        
+                            
+                            python ${BUILD_TASK_PATH}/tasks.py -p "${PROJECT_PATH}" \
+                            --type dotnet --task "sonarquberun" \
+                            --buildToolsPathInWorkspace "${BUILD_TOOLS_PATH_IN_WORKSPACE}" \
+                            --sonarQubeScanBeginEnd "end" \
+                            --sonarQubeLoginToken "${sonarQubeLoginToken}"														
+                        """, returnStdout: true)
+                        echo StaticCode_StdOut            
+                    } else {
+                        echo "The parameter 'params.Execute_StaticCodeAnalysis' is set to false"
+                    }
+                }
+            }
+        }
+        stage('Protecode SC') {
+            steps {
+                script {
+                    if(params.Execute_BinaryScan) {
+                        def ProtecodeSC_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Change to Workspace to Build Library"
+                            cd "${BUILD_TASK_PATH}"
+                            echo "Packaging the Out folder to Zip file and uploading the ziped file to scanning"
+                            python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" \
+                            --type protecodesc \
+                            --task 'uploaddirectory' \
+                            --protecodeSC_SourceDirectoryToUpload "${DOTNET_BUILD_OUTPUT}" \
+                            --protecodeSC_ApplicationToUpload "${protecodeSC_ApplicationToUpload}" \
+                            --protecodeSC_Group "${PROTECODESC_GROUP}" \
+                            --protecodeSC_UserName ${cred_protecode_Credentials_USR} \
+                            --protecodeSC_Pwd ${cred_protecode_Credentials_PSW} \
+                        """, returnStdout: true)      
+                        echo ProtecodeSC_StdOut   
+                    } else {
+                        echo "The parameter 'params.Execute_BinaryScan' is set to false"
+                    }
+                }
+            }
+        }
+        stage('BlackDuck Scan') {
+            steps {
+                script {
+                    if(params.Execute_BlackDuck){
+                        def BlackDuckScan_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Change to Workspace to Build Library"
+                            cd "${BUILD_TASK_PATH}"
+                            echo "Packaging the Out folder to Zip file and uploading the ziped file to scanning"
+                            python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" \
+                            --type blackduck \
+                            --task 'scandirectory' \
+                            --blackDuck_server "https://protex.honeywell.com" \
+                            --blackDuck_userName "${blackDuck_Credentials_USR}" \
+                            --blackDuck_password "${blackDuck_Credentials_PSW}" \
+                            --blackDuck_expertMode "analyze" \
+                            --blackDuck_pureProject "${BLACKDUCK_PUREPROJECT}" \
+                            --blackDuck_SourceCodeDirectories "${WORKSPACE}/src" \
+                            --blackDuck_DestinationDirectories "${WORKSPACE}/blackDuckSource" \
+                            --blackDuck_Excusions "*.Tests,src/**/published" \
+                            --blackDuck_finalScanDirectory "${WORKSPACE}/blackDuckSource"
+                        """, returnStdout: true)
+                        echo BlackDuckScan_StdOut   
+                    } else {
+                        echo "The parameter 'params.Execute_BlackDuck' is set to false"
+                    }
+                }
+            }
+        }        
+        stage('YAML Transformation') {
+            steps {
+                script {
+                    if(params.Execute_PublishImage){
+                        def YAMLTransformations_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Build Docker Image"
+                            if [ "${params.DeployEnv}" == "${environmentName_dev}" ]
+                            then
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" \
+                                --type "generic" \
+                                --task "updateFile" \
+                                --commonFunc_fileToUpdate "${KUBERNETES_YAML_FILE}" \
+                                --commonFunc_regextoReplace "<trans_imageRepository_url>;<trans_environmentTag>;<trans_imagename>;<trans_imagetag>" \
+                                --commonFunc_replacementText "${cred_acr_url_dev};${environmentTag_dev};${CONTAINER_IMAGE_NAME};${CONTAINER_TAG}" \
+                                --commonFunc_replaceLineOrText "text"
+
+                            elif [ "${params.DeployEnv}" == "${environmentName_qa}" ]
+                            then
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" \
+                                --type "generic" \
+                                --task "updateFile" \
+                                --commonFunc_fileToUpdate "${KUBERNETES_YAML_FILE}" \
+                                --commonFunc_regextoReplace "<trans_imageRepository_url>;<trans_environmentTag>;<trans_imagename>;<trans_imagetag>" \
+                                --commonFunc_replacementText "${cred_acr_url_qa};${environmentTag_qa};${CONTAINER_IMAGE_NAME};${CONTAINER_TAG}" \
+                                --commonFunc_replaceLineOrText "text"
+                            fi                   
+                        """, returnStdout: true)
+                        echo YAMLTransformations_StdOut
+                    } else {
+                        echo "The parameter 'params.Execute_PublishImage' is set to false"
+                    }
+                }
+            }
+        }
+        stage('Publish Docker Image') {
+            steps {
+                script {
+                    if(params.Execute_PublishImage){
+                        def PublishDocImg_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            if [ "${params.DeployEnv}" == "${environmentName_dev}" ]
+                            then
+                                echo "Storing Docker Image to the Registry ${cred_acr_url_dev}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "docker" --task "push" --DockerRegUsername "${cred_azServicePrincipal_dev_USR}" --DockerRegPwd "${cred_azServicePrincipal_dev_PSW}" --DockerImageTag "${cred_acr_url_dev}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}" --DockerRegistryServer "${cred_acr_url_dev}"
+                            elif [ "${params.DeployEnv}" == "${environmentName_qa}" ]
+                            then
+                                echo "Storing Docker Image to the Registry ${cred_acr_url_qa}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "docker" --task "push" --DockerRegUsername "${cred_azServicePrincipal_qa_USR}" --DockerRegPwd "${cred_azServicePrincipal_qa_PSW}" --DockerImageTag "${cred_acr_url_qa}/${CONTAINER_IMAGE_NAME}:${CONTAINER_TAG}" --DockerRegistryServer "${cred_acr_url_qa}"
+                            fi
+                        """, returnStdout: true)
+                        echo PublishDocImg_StdOut
+                    } else {
+                        echo "The parameter 'params.Execute_PublishImage' is set to false"
+                    }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes AKS Cluster') {
+            steps {
+                script {
+                    if(params.Execute_ImageDeployment){
+                        def SetupKubernetes_StdOut = sh(script: """
+                            #!/usr/bin/env bash
+                            source ~/.bash_profile
+                            echo "Clearing .Kube config file - Begin"
+                            rm -f "${HOME}/.kube/config"
+                            echo "Clearing .Kube config file - End"
+
+                            if [ "${params.DeployEnv}" == "${environmentName_dev}" ]
+                            then
+                                echo ${params.DeployEnv}
+                                echo "Login to Azure"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "azure" --task "login" --azServicePrincipalId "${cred_azServicePrincipal_dev_USR}" --azServicePrincipalAuthKey "${cred_azServicePrincipal_dev_PSW}" --azTenantId "${cred_azTenantId}" --azsubscriptionId "${cred_azSubscriptionId_dev}" 
+
+                                echo "Get Azure AKS Creedntials"
+                                echo "Set Docker Registry to Kubernetes Secret - Begin"
+                                ##python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "kubernetes" --task "CreateDockerRegistrySecret" --DockerRegistryName "${cred_acr_url_dev}" --DockerRegistryServer "${cred_acr_url_dev}" --DockerRegUsername "${cred_azServicePrincipal_dev_USR}" --DockerRegPwd "${cred_azServicePrincipal_dev_PSW}" --DockerRegistryEmail "antony.johnpaul@honeywell.com"
+
+                                echo "Az AKS Get-Credentials - Begin"
+                                python ${BUILD_TASK_PATH}/tasks.py --type "kubernetes" --task "aksGetCredentials" --kubernetes_clusterName "${cred_AzAKS_Cluster_Name_dev}" --az_AksCluster_rg "${cred_AzAKS_Cluster_RG_dev}"
+                            
+                                echo "Az kubectl config set-context - Begin"
+                                # DON'T set Namespace if YAML file has NameSpace
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "generic" --task "executeCmd" --genericCmd "kubectl config set-context ${cred_AzAKS_Cluster_Name_dev}"
+                                echo "Az kubectl config set-context - End"
+                                
+                                echo "Updating deloyment YAML with Image Name and deploying - Begin"
+                                kubectl apply -f ${KUBERNETES_YAML_FILE}
+                                echo "Updating deloyment YAML with Image Name - End"
+
+                            elif [ "${params.DeployEnv}" == "${environmentName_qa}" ]
+                            then
+                                echo ${params.DeployEnv}
+                                echo "Login to Azure"
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "azure" --task "login" --azServicePrincipalId "${cred_azServicePrincipal_qa_USR}" --azServicePrincipalAuthKey "${cred_azServicePrincipal_qa_PSW}" --azTenantId "${cred_azTenantId}" --azsubscriptionId "${cred_azSubscriptionId_qa}" 
+
+                                echo "Get Azure AKS Creedntials"
+                                echo "Set Docker Registry to Kubernetes Secret - Begin"
+                                ##python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "kubernetes" --task "CreateDockerRegistrySecret" --DockerRegistryName "${cred_acr_url_qa}" --DockerRegistryServer "${cred_acr_url_qa}" --DockerRegUsername "${cred_azServicePrincipal_qa_USR}" --DockerRegPwd "${cred_azServicePrincipal_qa_PSW}" --DockerRegistryEmail "antony.johnpaul@honeywell.com"
+
+                                echo "Az AKS Get-Credentials - Begin"
+                                python ${BUILD_TASK_PATH}/tasks.py --type "kubernetes" --task "aksGetCredentials" --kubernetes_clusterName "${cred_AzAKS_Cluster_Name_qa}" --az_AksCluster_rg "${cred_AzAKS_Cluster_RG_qa}"
+                            
+                                echo "Az kubectl config set-context - Begin"
+                                # DON'T set Namespace if YAML file has NameSpace
+                                python ${BUILD_TASK_PATH}/tasks.py -p "${WORKSPACE}" --type "generic" --task "executeCmd" --genericCmd "kubectl config set-context ${cred_AzAKS_Cluster_Name_qa}"
+                                echo "Az kubectl config set-context - End"
+                                
+                                echo "Updating deloyment YAML with Image Name and deploying - Begin"
+                                kubectl apply -f ${KUBERNETES_YAML_FILE}
+                                echo "Updating deloyment YAML with Image Name - End"
+                            fi      
+                            
+                            python ${BUILD_TASK_PATH}/tasks.py --type "kubernetes" --task "getPodsStatus" --genericKubernetesPodName "${GENERIC_POD_NAME}"
+                        """, returnStdout: true)      
+                        echo SetupKubernetes_StdOut   
+                    } else {
+                        echo "The parameter 'params.Execute_ImageDeployment' is set to false"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                if(params.Execute_UnitTests){
+                    step([$class: 'MSTestPublisher', testResultsFile:"**/*.trx", failOnError: true, keepLongStdio: true])
+                    step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "**/*.CoverageReport.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+                }
+                if(params.Execute_SendEmailStatus){                
+                    emailext (
+                        attachmentsPattern: '**/*.trx',
+                        subject: currentBuild.currentResult + " : " + env.JOB_NAME + "[" +env.BUILD_NUMBER+ "] - Environment: " + env.DeployEnv,
+                        body: '''${JELLY_SCRIPT , template="jenkins_email_ext_template.jelly"}''',
+                        recipientProviders: [
+                            [ $class: "DevelopersRecipientProvider" ],
+                            [ $class: "RequesterRecipientProvider" ],
+                            [ $class: "CulpritsRecipientProvider"]
+                        ],
+                        to: "${env.glob_EnvVar_Titan_UFC_MailList}"
+                    )
+                } else {
+                    echo "The parameter 'params.Execute_SendEmailStatus' is set to false"
+                }
+            }
+        }
+    }    
+}
