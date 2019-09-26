@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -20,6 +21,7 @@
     <PackageReference Include="Titan.Common.Diagnostics" Version="3.0.2" />
     <PackageReference Include="Titan.Common.Services.Auditing.AspNetCore" Version="3.0.1" />
     <PackageReference Include="Titan.UFC.Common.ExceptionMiddleWare" Version="2.10.2" />
+    <PackageReference Include="Titan.UFC.Common.Logger" Version="2.10.2" />
     <PackageReference Include="Titan.UFC.ExceptionAndValidation" Version="2.9.5" />
   </ItemGroup>
 

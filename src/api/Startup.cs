@@ -1,12 +1,18 @@
-﻿using FluentValidation.AspNetCore;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Titan.Common.Configuration.ContainerSecrets;
@@ -14,8 +20,12 @@ using Titan.Common.Diagnostics.State;
 using Titan.UFC.Common.ExceptionMiddleWare;
 using TitanTemplate.titanaddressapi.Configuration;
 using TitanTemplate.titanaddressapi.Diagnostics;
+using TitanTemplate.titanaddressapi.Entities;
 using TitanTemplate.titanaddressapi.HealthChecks;
+using TitanTemplate.titanaddressapi.Mapper;
 using TitanTemplate.titanaddressapi.Models;
+using TitanTemplate.titanaddressapi.Repository;
+using TitanTemplate.titanaddressapi.Service;
 
 namespace TitanTemplate.titanaddressapi
 {
@@ -40,16 +50,46 @@ namespace TitanTemplate.titanaddressapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-
-
             services.Configure<Settings>(Configuration);
             Settings = Configuration.Get<Settings>();
+            services.InjectServiceDependency();
+            //services.AddAutoMapper(x => x.AddProfile(new MappingsProfile()));
 
             //All requests will be logged
             services.AddDefaultRequestLoggingEventSource();
             services.AddMvcCore(c => c.AddGlobalLoggingRequestFilters())
                 .AddApiExplorer()
                 .AddJsonFormatters();
+
+            services.Configure<RequestLocalizationOptions>(
+               opts =>
+               {
+                   var supportedCultures = new List<CultureInfo>
+                   {
+                        new CultureInfo("en-GB"),
+                        new CultureInfo("en-US"),
+                        new CultureInfo("en"),
+                        new CultureInfo("fr-FR"),
+                        new CultureInfo("fr"),
+                   };
+
+                   opts.DefaultRequestCulture = new RequestCulture("en-US");
+                    // Formatting numbers, dates, etc.
+                    opts.SupportedCultures = supportedCultures;
+                    // UI strings that we have localized.
+                    opts.SupportedUICultures = supportedCultures;
+               });
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddDbContextPool<AddressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+        .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)));
 
             services.AddSwaggerGen(c =>
             {
@@ -90,8 +130,8 @@ namespace TitanTemplate.titanaddressapi
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMiddleware(typeof(CustomExceptionMiddleware));
             app.UseTitanRequestLogging();
+            app.UseMiddleware(typeof(CustomExceptionMiddleware));
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -127,6 +167,8 @@ namespace TitanTemplate.titanaddressapi
         public static IServiceCollection InjectServiceDependency(this IServiceCollection services)
         {
             services.AddScoped<IAddressValidator, AddressValidator>();
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
             return services;
         }
     }

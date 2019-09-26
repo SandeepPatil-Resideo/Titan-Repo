@@ -1,23 +1,20 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using TitanTemplate.titanaddressapi.Models.Common;
+
+
 
 namespace TitanTemplate.titanaddressapi.Models
 {
     /// <summary>
     /// Address model
     /// </summary>
-    [Table("Address", Schema = "dbo")]
+    
     public class Address
     {
         /// <summary>
         /// Primary key of the user address
         /// </summary>
-        [JsonProperty("addressId")]
-        [Key]
+        [JsonProperty("addressId")]        
         public int AddressId { get; set; }
         /// <summary>
         /// Unique guid to get the address
@@ -25,10 +22,15 @@ namespace TitanTemplate.titanaddressapi.Models
         [JsonProperty("uniqueAddressId")]
         public Guid UniqueAddressId { get; set; } = new Guid();
         /// <summary>
-        /// Name
+        /// contactName
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("contactName")]
         public string Name { get; set; }
+        /// <summary>
+        /// contactNumber
+        /// </summary>
+        [JsonProperty("contactNumber")]
+        public string ContactNumber { get; set; }
         /// <summary>
         /// Addressline 1 
         /// </summary>
@@ -74,31 +76,6 @@ namespace TitanTemplate.titanaddressapi.Models
         /// </summary>
         [JsonProperty("longitude")]
         public decimal Longitude { get; set; }
-        /// <summary>
-        /// Emails
-        /// </summary>
-        [JsonProperty("primaryEmail")]
-        public string PrimaryEmail { get; set; }
-        /// <summary>
-        /// Emails
-        /// </summary>
-        [JsonProperty("secondaryEmail")]
-        public string SecondaryEmail { get; set; }
-        /// <summary>
-        /// mobile number belongs to the address
-        /// </summary>
-        [JsonProperty("mobileNumber")]
-        public string MobileNumber { get; set; }
-        /// <summary>
-        /// Telephone number belongs to the address
-        /// </summary>
-        [JsonProperty("telephoneNumber")]
-        public string TelephoneNumber { get; set; }
-
-        /// <summary>
-        /// Fax belongs to the address
-        /// </summary>
-        [JsonProperty("fax")]
-        public string Fax { get; set; }
+     
     }
 }
