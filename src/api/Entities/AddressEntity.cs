@@ -7,12 +7,7 @@ namespace TitanTemplate.titanaddressapi.Entities
 {
     [Table("Address", Schema = "Address")]
     public partial class AddressEntity
-    {
-        
-        public AddressEntity()
-        {
-            Address = new HashSet<AddressEntity>();
-        }
+    {  
         [Key]
         public int AddressId { get; set; }
         public Guid Uuid { get; set; }
@@ -29,6 +24,6 @@ namespace TitanTemplate.titanaddressapi.Entities
         public string ContactNumber { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public virtual ICollection<AddressEntity> Address { get; set; }
+        
     }
 }

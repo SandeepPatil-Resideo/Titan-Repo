@@ -64,21 +64,12 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<Address> GetAddressById(Guid uniqueAddressId)
         {
-            try
+            var address = await _addressEntity.Where(a => a.Uuid == uniqueAddressId).FirstOrDefaultAsync();
+            if (address == null)
             {
-                var address =await _addressEntity.Where(a => a.Uuid == uniqueAddressId).FirstOrDefaultAsync();
-                if (address == null)
-                {
-                    throw new TitanCustomException(404, "Address not found");
-                }
-                return _mapper.Map<Address>(address);
+                throw new TitanCustomException(404, "Address not found");
             }
-            catch(Exception ex)
-            {
-
-            }
-            return null;
-            //return _mapper.Map<Address>(address);
+            return _mapper.Map<Address>(address);
         }
         /// <summary>
         /// Update address entity
@@ -94,8 +85,12 @@ namespace TitanTemplate.titanaddressapi.Repository
                 throw new TitanCustomException(404, "Address not found");
             }
             var addressEntityObject = _mapper.Map<AddressEntity>(address);
+            addressEntityObject.AddressLine1 = address.AddressLine1;
+            addressEntityObject.AddressLine2 = address.AddressLine2;
+            addressEntityObject.AddressLine3 = address.AddressLine3;
+            //add
             _addressContext.Update(addressEntityObject);
-            await _addressContext.SaveChangesAsync();
+           
             return address;
         }
     }

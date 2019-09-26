@@ -14,18 +14,19 @@ namespace TitanTemplate.titanaddressapi.Models
         /// <summary>
         /// Primary key of the user address
         /// </summary>
-        [JsonProperty("addressId")]        
+        [JsonProperty("addressId")]   
+        [JsonIgnore]
         public int AddressId { get; set; }
         /// <summary>
         /// Unique guid to get the address
         /// </summary>
         [JsonProperty("uniqueAddressId")]
-        public Guid UniqueAddressId { get; set; } = new Guid();
+        public Guid Uuid { get; set; }
         /// <summary>
         /// contactName
         /// </summary>
         [JsonProperty("contactName")]
-        public string Name { get; set; }
+        public string ContactName { get; set; }
         /// <summary>
         /// contactNumber
         /// </summary>

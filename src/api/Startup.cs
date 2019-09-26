@@ -53,8 +53,7 @@ namespace TitanTemplate.titanaddressapi
             services.Configure<Settings>(Configuration);
             Settings = Configuration.Get<Settings>();
             services.InjectServiceDependency();
-            //services.AddAutoMapper(x => x.AddProfile(new MappingsProfile()));
-
+            services.AddApiVersioning();
             //All requests will be logged
             services.AddDefaultRequestLoggingEventSource();
             services.AddMvcCore(c => c.AddGlobalLoggingRequestFilters())
@@ -87,6 +86,7 @@ namespace TitanTemplate.titanaddressapi
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+           
 
             services.AddDbContextPool<AddressContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
         .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)));

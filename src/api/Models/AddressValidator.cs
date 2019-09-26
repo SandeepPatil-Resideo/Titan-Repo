@@ -31,11 +31,11 @@ namespace TitanTemplate.titanaddressapi.Models
               .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
               .WithMessage(sharedLocalizer[SharedResourceKeys.AddressLine1Length]);
 
-            RuleFor(m => m.Name)
+            RuleFor(m => m.ContactName)
                .NotEmpty()
                .WithErrorCode(ErrorTypes.RequiredError.ToString())
                .WithMessage(sharedLocalizer[SharedResourceKeys.NameRquired]);
-            RuleFor(m => ValidationHelper.CheckName(m.Name))
+            RuleFor(m => ValidationHelper.CheckName(m.ContactName))
                 .NotEqual(false)
                 .WithErrorCode(ErrorTypes.RequiredError.ToString())
                 .WithMessage(sharedLocalizer[SharedResourceKeys.NameLength]);
@@ -52,14 +52,7 @@ namespace TitanTemplate.titanaddressapi.Models
             .MaximumLength(90)
             .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
             .WithMessage(sharedLocalizer[SharedResourceKeys.StateCodeLength]);
-            RuleFor(m => ValidationHelper.CheckLatitude(m.Latitude.ToString()))
-                .NotEqual(false)
-                .WithErrorCode(ErrorTypes.RequiredError.ToString())
-                .WithMessage(sharedLocalizer[SharedResourceKeys.InvalidLatitudeValue]);
-            RuleFor(m => ValidationHelper.CheckLongitude(m.Longitude.ToString()))
-                .NotEqual(false)
-                .WithErrorCode(ErrorTypes.RequiredError.ToString())
-                .WithMessage(sharedLocalizer[SharedResourceKeys.InvalidLatitudeValue]);
+         
 
         }
 

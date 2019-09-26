@@ -11,7 +11,7 @@ using TitanTemplate.titanaddressapi.Service;
 
 namespace TitanTemplate.titanaddressapi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/Address")]
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
@@ -34,6 +34,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [TitanAudit("Create_Address")]
         public async Task<IActionResult> Post([FromBody]Address address)
         {
+            address.Uuid = Guid.NewGuid();
             Address addressResult = await _addressService.CreateAddress(address);
             return Ok(addressResult);
         }
@@ -50,7 +51,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            //int delete
+            //int deleted
         }
     }
 }
