@@ -35,6 +35,21 @@ namespace TitanTemplate.titanaddressapi.Diagnostics
             WriteEvent(2900, exceptionMessage, exceptionSource, stackTrace, exceptionType);
         }
 
+        [NonEvent]
+        public void PostAsyncError(Exception e)
+        {
+            if (IsEnabled())
+            {
+                PostAsyncError(e.Message, e.Source, e.StackTrace, e.GetType().Name);
+            }
+        }
+
+        [Event(2900, Message = "Error on Post request - {0}", Level = EventLevel.Error)]
+        public void PostAsyncError(string exceptionMessage, string exceptionSource, string stackTrace, string exceptionType)
+        {
+            WriteEvent(2900, exceptionMessage, exceptionSource, stackTrace, exceptionType);
+        }
+
         #endregion
     }
 }

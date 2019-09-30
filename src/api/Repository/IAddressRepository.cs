@@ -40,6 +40,12 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <param name="uniqueAddressId"></param>
         /// <returns></returns>
         Task<int> DeleteAddress(Guid uniqueAddressId);
+        /// <summary>
+        /// Check address is available
+        /// </summary>
+        /// <param name="uniqueAddressId"></param>
+        /// <returns></returns>
+        Task<bool> CheckAddressId(Guid uniqueAddressId);
 
     }
 }

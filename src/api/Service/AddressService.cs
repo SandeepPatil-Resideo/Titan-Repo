@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Titan.UFC.Common.ExceptionMiddleWare;
+using TitanTemplate.titanaddressapi.LocalizationResource;
 using TitanTemplate.titanaddressapi.Models;
 using TitanTemplate.titanaddressapi.Repository;
 
@@ -15,23 +17,26 @@ namespace TitanTemplate.titanaddressapi.Service
     public class AddressService : BaseService,IAddressService
     {
         private readonly IAddressRepository _addressRepository;
+        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
         /// <summary>
         /// Address service constructor to initialize 
         /// the repo and logger dependencies
         /// </summary>
         /// <param name="addressRepository"></param>
-        public AddressService(IAddressRepository addressRepository)
+        /// <param name="sharedLocalizer"></param>
+        public AddressService(IAddressRepository addressRepository, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             _addressRepository = addressRepository;
+            _sharedLocalizer = sharedLocalizer;
         }
         /// <summary>
         /// Create address service
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public Task<Address> CreateAddress(Address address)
-        {
-            return _addressRepository.CreateAddress(address);
+        public async Task<Address> CreateAddress(Address address)
+        {  
+            return await _addressRepository.CreateAddress(address);
         }
         /// <summary>
         /// Delete the address information against
@@ -39,9 +44,12 @@ namespace TitanTemplate.titanaddressapi.Service
         /// </summary>
         /// <param name="uniqueAddressId"></param>
         /// <returns></returns>
-        public Task<int> DeleteAddress(string uniqueAddressId)
+        public async Task<int> DeleteAddress(string uniqueAddressId)
         {
-            return _addressRepository.DeleteAddress(Guid.Parse(uniqueAddressId));
+            bool isAddressAvailable = await _addressRepository.CheckAddressId(Guid.Parse(uniqueAddressId));
+            if(!isAddressAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
+            return await _addressRepository.DeleteAddress(Guid.Parse(uniqueAddressId));
         }
         /// <summary>
         /// Get the address information
@@ -49,9 +57,12 @@ namespace TitanTemplate.titanaddressapi.Service
         /// </summary>
         /// <param name="uniqueAddressId"></param>
         /// <returns></returns>
-        public Task<Address> GetAddressById(string uniqueAddressId)
+        public async Task<Address> GetAddressById(string uniqueAddressId)
         {
-            return _addressRepository.GetAddressById(Guid.Parse(uniqueAddressId));
+            bool isAddressAvailable = await _addressRepository.CheckAddressId(Guid.Parse(uniqueAddressId));
+            if (!isAddressAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
+            return await _addressRepository.GetAddressById(Guid.Parse(uniqueAddressId));
         }
         /// <summary>
         /// Update the address
@@ -59,9 +70,13 @@ namespace TitanTemplate.titanaddressapi.Service
         /// <param name="uniqueAddressId"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public Task<Address> UpdateAddress(string uniqueAddressId, Address address)
+        public async Task<Address> UpdateAddress(string uniqueAddressId, Address address)
         {
-            return _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);            
+            bool isAddressAvailable = await _addressRepository.CheckAddressId(Guid.Parse(uniqueAddressId));
+            if (!isAddressAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
+
+            return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);            
         }
     }
 }

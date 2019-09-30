@@ -84,14 +84,33 @@ namespace TitanTemplate.titanaddressapi.Repository
             {
                 throw new TitanCustomException(404, "Address not found");
             }
-            var addressEntityObject = _mapper.Map<AddressEntity>(address);
-            addressEntityObject.AddressLine1 = address.AddressLine1;
-            addressEntityObject.AddressLine2 = address.AddressLine2;
-            addressEntityObject.AddressLine3 = address.AddressLine3;
-            //add
-            _addressContext.Update(addressEntityObject);
-           
-            return address;
+            addressEntity.AddressLine1 = address.AddressLine1;
+            addressEntity.AddressLine2 = address.AddressLine2;
+            addressEntity.AddressLine3 = address.AddressLine3;
+            addressEntity.AddressLine3 = address.AddressLine3;
+            addressEntity.City = address.City;
+            addressEntity.StateCode = address.StateCode;
+            addressEntity.CountryCode = address.CountryCode;
+            addressEntity.ContactName = address.ContactName;
+            addressEntity.PostalCode = address.PostalCode;
+            _addressContext.Update(addressEntity);
+            await _addressContext.SaveChangesAsync();           
+            return await GetAddressById(uniqueAddressId);
+        }
+        /// <summary>
+        /// Check the address id is available in the entity
+        /// </summary>
+        /// <param name="uniqueAddressId"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckAddressId(Guid uniqueAddressId)
+        {
+            var addressEntity =await _addressEntity.SingleOrDefaultAsync(a => a.Uuid == uniqueAddressId);
+            if (addressEntity == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

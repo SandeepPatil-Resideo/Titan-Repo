@@ -24,39 +24,58 @@ namespace TitanTemplate.titanaddressapi.Models
             RuleFor(m => m.AddressLine1)
                .NotEmpty()
                .WithErrorCode(ErrorTypes.RequiredError.ToString())
-               .WithMessage(sharedLocalizer[SharedResourceKeys.AddressLine1Rquired]);
+               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address1_Required]);
 
             RuleFor(m => m.AddressLine1)
               .MaximumLength(90)
               .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.AddressLine1Length]);
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address1_MaxLength]);
+
+            RuleFor(m => m.AddressLine2)
+          .NotEmpty()
+          .WithErrorCode(ErrorTypes.RequiredError.ToString())
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address2_Required]);
+
+            RuleFor(m => m.AddressLine2)
+          .MaximumLength(100)
+          .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address2_MaxLength]);
+
+            RuleFor(m => m.AddressLine3)
+          .NotEmpty()
+          .WithErrorCode(ErrorTypes.RequiredError.ToString())
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address3_Required]);
+
+            RuleFor(m => m.AddressLine3)
+          .MaximumLength(100)
+          .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address3_MaxLength]);
+
+            RuleFor(m => m.ContactName)
+       .MaximumLength(100)
+       .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+       .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Contact_Name_Length]);
 
             RuleFor(m => m.ContactName)
                .NotEmpty()
                .WithErrorCode(ErrorTypes.RequiredError.ToString())
-               .WithMessage(sharedLocalizer[SharedResourceKeys.NameRquired]);
+               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Contact_Name_Required]);
+
             RuleFor(m => ValidationHelper.CheckName(m.ContactName))
                 .NotEqual(false)
                 .WithErrorCode(ErrorTypes.RequiredError.ToString())
-                .WithMessage(sharedLocalizer[SharedResourceKeys.NameLength]);
-            
-            RuleFor(m => m.AddressLine2)
-             .MaximumLength(90)
-             .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-             .WithMessage(sharedLocalizer[SharedResourceKeys.AddressLine2Length]);
+                .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Contact_Name_Invalid]);
+
             RuleFor(m => m.City)
-             .MaximumLength(90)
+             .MaximumLength(50)
              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-             .WithMessage(sharedLocalizer[SharedResourceKeys.CityLength]);
-            RuleFor(m => m.StateCode)
-            .MaximumLength(90)
-            .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-            .WithMessage(sharedLocalizer[SharedResourceKeys.StateCodeLength]);
-         
+             .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_MaxLength]);
+
+            RuleFor(m => ValidationHelper.CheckName(m.City))
+              .NotEqual(false)
+              .WithErrorCode(ErrorTypes.RequiredError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_Invalid]);
 
         }
-
-
-
     }
 }

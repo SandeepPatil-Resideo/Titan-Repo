@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Titan.Common.Diagnostics.State;
 using Titan.Common.Services.Auditing.AspNetCore;
+using TitanTemplate.titanaddressapi.Diagnostics;
+using TitanTemplate.titanaddressapi.LocalizationResource;
 using TitanTemplate.titanaddressapi.Models;
 using TitanTemplate.titanaddressapi.Service;
 
@@ -11,47 +18,104 @@ using TitanTemplate.titanaddressapi.Service;
 
 namespace TitanTemplate.titanaddressapi.Controllers
 {
+    /// <summary>
+    /// Address Controller class
+    /// to perform the crud operation
+    /// </summary>
     [Route("api/v{version:apiVersion}/Address")]
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
-        public AddressController(IAddressService addressService)
+        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
+        protected IStateObserver StateObserver { get; }
+        /// <summary>
+        /// Address constructor to initialize the dependencies
+        /// </summary>
+        /// <param name="addressService"></param>
+        /// <param name="sharedLocalizer"></param>
+        public AddressController(IAddressService addressService, IStringLocalizer<SharedResource> sharedLocalizer, IStateObserver stateObserver)
         {
             _addressService = addressService;
+            _sharedLocalizer = sharedLocalizer;
+            StateObserver = stateObserver;
         }
-
+        /// <summary>
+        /// Get address details based on the 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<controller>/5
-        [HttpGet("{id}")]
-        [TitanAudit("Get_address")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{id}",Name ="Address_Get")]
+        [TitanAudit("Get request with {address id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Address>> Get(string id)
         {
             Address address= await _addressService.GetAddressById(id);
             return Ok(address);
         }
 
         // POST api/<controller>
-        [HttpPost]
-        [TitanAudit("Create_Address")]
-        public async Task<IActionResult> Post([FromBody]Address address)
+        [HttpPost(Name ="Address_Post")]
+        [TitanAudit("Post equest with address object")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Address>> Post([FromBody]Address address)
         {
-            address.Uuid = Guid.NewGuid();
-            Address addressResult = await _addressService.CreateAddress(address);
-            return Ok(addressResult);
+            try
+            {
+                if (address == null)
+                {
+                    throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
+                }
+                address.Uuid = Guid.NewGuid();
+                Address addressResult = await _addressService.CreateAddress(address);
+                StateObserver.Success();
+                return Ok(addressResult);
+            }
+            catch (Exception e)
+            {
+                StateObserver.Failure(e);
+                titanaddressapiEventSource.Log.PostAsyncError(e);
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody]Address address)
+        [HttpPut("{id}",Name ="Address_Put")]
+        [TitanAudit("Put request with {address id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Address>> Put(string id, [FromBody]Address address)
         {
-            Address updateAddress = await _addressService.UpdateAddress(id, address);
-            return Ok(updateAddress);
+            try
+            {
+                if (address == null)
+                {
+                    throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
+                }
+                Address updateAddress = await _addressService.UpdateAddress(id, address);
+                StateObserver.Success();
+                return Ok(updateAddress);
+            }
+            catch (Exception e)
+            {
+                StateObserver.Failure(e);
+                titanaddressapiEventSource.Log.PutAsyncError(e);
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}", Name = "Address_Delete")]
+        [TitanAudit("Delete request with {address id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Delete(string id)
         {
-            //int deleted
+            await _addressService.DeleteAddress(id);
+            return NoContent();
         }
     }
 }
