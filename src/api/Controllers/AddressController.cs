@@ -4,12 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Titan.Common.Diagnostics.State;
 using Titan.Common.Services.Auditing.AspNetCore;
 using TitanTemplate.titanaddressapi.Diagnostics;
+using TitanTemplate.titanaddressapi.Entities;
 using TitanTemplate.titanaddressapi.LocalizationResource;
 using TitanTemplate.titanaddressapi.Models;
 using TitanTemplate.titanaddressapi.Service;
@@ -28,17 +32,26 @@ namespace TitanTemplate.titanaddressapi.Controllers
         private readonly IAddressService _addressService;
         private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
         protected IStateObserver StateObserver { get; }
+        private readonly IMapper _mapper;
+        private readonly AddressContext _addressContext;
+        private readonly DbSet<AddressEntity> _addressEntity;
         /// <summary>
         /// Address constructor to initialize the dependencies
         /// </summary>
         /// <param name="addressService"></param>
         /// <param name="sharedLocalizer"></param>
         /// <param name="stateObserver"></param>
-        public AddressController(IAddressService addressService, IStringLocalizer<SharedResource> sharedLocalizer, IStateObserver stateObserver)
+        /// <param name="mapper"></param>
+        /// <param name="addressContext"></param>
+        public AddressController(IAddressService addressService, IStringLocalizer<SharedResource> sharedLocalizer, 
+            IStateObserver stateObserver, IMapper mapper, AddressContext addressContext)
         {
             _addressService = addressService;
             _sharedLocalizer = sharedLocalizer;
             StateObserver = stateObserver;
+            _mapper = mapper;
+            _addressContext = addressContext;
+            _addressEntity = _addressContext.Set<AddressEntity>();
         }
         /// <summary>
         /// Get address details based on the 
@@ -47,18 +60,18 @@ namespace TitanTemplate.titanaddressapi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         // GET api/<controller>/5
-        [HttpGet("{id}",Name ="Address_Get")]
+        [HttpGet("{id}", Name = "Address_Get")]
         [TitanAudit("Get request with {address id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Address>> Get(string id)
         {
-            Address address= await _addressService.GetAddressById(id);
+            Address address = await _addressService.GetAddressById(id);
             return Ok(address);
         }
 
         // POST api/<controller>
-        [HttpPost(Name ="Address_Post")]
+        [HttpPost(Name = "Address_Post")]
         [TitanAudit("Post equest with address object")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -84,7 +97,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}",Name ="Address_Put")]
+        [HttpPut("{id}", Name = "Address_Put")]
         [TitanAudit("Put request with {address id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -118,6 +131,17 @@ namespace TitanTemplate.titanaddressapi.Controllers
         {
             await _addressService.DeleteAddress(id);
             return NoContent();
+        }
+        [HttpPatch("{id}", Name = "Address_Patch")]
+        public async Task<IActionResult> Patch(string id, [FromBody]JsonPatchDocument<Address> addressPatch)
+        {
+            AddressEntity addressEntity = _addressEntity.SingleOrDefault(a => a.Uuid == Guid.Parse(id));
+            Address address = _mapper.Map<Address>(addressEntity);
+            addressPatch.ApplyTo(address);
+            _mapper.Map(address, addressEntity);
+            _addressContext.Update(addressEntity);
+            await _addressContext.SaveChangesAsync();
+            return Ok(address);
         }
     }
 }
