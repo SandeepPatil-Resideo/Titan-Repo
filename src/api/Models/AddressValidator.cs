@@ -76,6 +76,26 @@ namespace TitanTemplate.titanaddressapi.Models
               .WithErrorCode(ErrorTypes.RequiredError.ToString())
               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_Invalid]);
 
+            RuleFor(m => m.Latitude)
+              .NotEmpty()
+              .WithErrorCode(ErrorTypes.RequiredError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Latitude_Required]);
+
+            RuleFor(m => m.Longitude)
+          .NotEmpty()
+          .WithErrorCode(ErrorTypes.RequiredError.ToString())
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Required]);
+
+            RuleFor(m => ValidationHelper.CheckLatitude(m.Latitude.ToString()))
+            .NotEqual(false)
+            .WithErrorCode(ErrorTypes.RequiredError.ToString())
+            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Latitude_Invalid]);
+
+            RuleFor(m => ValidationHelper.CheckLongitude(m.Longitude.ToString()))
+         .NotEqual(false)
+         .WithErrorCode(ErrorTypes.RequiredError.ToString())
+         .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Invalid]);
+
         }
     }
 }

@@ -22,14 +22,17 @@ namespace TitanTemplate.titanaddressapi.LocalizationResource
 
         public static readonly string Address_City_MaxLength = "Address_City_MaxLength";
         public static readonly string Address_City_Invalid = "Address_City_Invalid";
-        public static readonly string StateCodeLength = "StateCodeLength";
-        public static readonly string CountryCodeLength = "CountryCodeLength";
-        public static readonly string InvalidLatitudeValue = "InvalidLatutudeValue";
-        public static readonly string InvalidLongitudeValue = "InvalidLongitudeValue";        
-        public static readonly string PostalCodeLength = "PostalCodeLength";
+        
 
         public static readonly string Address_Input_Validation = "Address_Input_Validation";
         public static readonly string Address_Id_NotFound = "Address_Id_NotFound";
+
+        public static readonly string Address_Latitude_Invalid = "Address_Latitude_Invalid";
+
+        public static readonly string Address_Longitude_Invalid = "Address_Longitude_Invalid";
+
+        public static readonly string Address_Latitude_Required = "Address_Latitude_Required";
+        public static readonly string Address_Longitude_Required = "Address_Longitude_Required";
 
         #endregion
     }

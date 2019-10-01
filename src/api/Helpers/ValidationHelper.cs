@@ -16,7 +16,7 @@ namespace TitanTemplate.titanaddressapi.Helpers
         {
             bool retVal = true;
 
-            if (string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
                 retVal = !System.Text.RegularExpressions.Regex.IsMatch(name, "[^a-zA-Z\\s]");
             }
@@ -29,12 +29,12 @@ namespace TitanTemplate.titanaddressapi.Helpers
         /// <returns></returns>
         public static bool CheckLatitude(string lalitude)
         {
-            bool retVal = false;
-            var latutudeRegx = @"^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$";
+            bool retVal = true;            
+            var latitudeRegx = @"^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$";
 
-            if (string.IsNullOrEmpty(lalitude))
+            if (!string.IsNullOrEmpty(lalitude))
             {
-                retVal = System.Text.RegularExpressions.Regex.IsMatch(lalitude, latutudeRegx);
+                retVal = !System.Text.RegularExpressions.Regex.IsMatch(lalitude, latitudeRegx);
             }
             return retVal;
         }
@@ -45,25 +45,14 @@ namespace TitanTemplate.titanaddressapi.Helpers
         /// <returns></returns>
         public static bool CheckLongitude(string longitude)
         {
-            bool retVal = false;
+            bool retVal = true;
             var longitudeRegx = @"^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9] [0-9]|1[0-7] [0-9])(?:(?:\.[0-9]{1,6})?))$";
 
-            if (string.IsNullOrEmpty(longitude))
+            if (!string.IsNullOrEmpty(longitude))
             {
-                retVal = System.Text.RegularExpressions.Regex.IsMatch(longitude, longitudeRegx);
+                retVal = !System.Text.RegularExpressions.Regex.IsMatch(longitude, longitudeRegx);
             }
             return retVal;
-        }
-        
-        /// <summary>
-        /// Validate phone number
-        /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <returns></returns>
-        public static bool checkPhoneNumber(string phoneNumber)
-        {
-            bool retValue = true;
-            return retValue;
         }
 
         /// <summary>

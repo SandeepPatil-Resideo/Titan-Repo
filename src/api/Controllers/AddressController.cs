@@ -33,6 +33,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         /// </summary>
         /// <param name="addressService"></param>
         /// <param name="sharedLocalizer"></param>
+        /// <param name="stateObserver"></param>
         public AddressController(IAddressService addressService, IStringLocalizer<SharedResource> sharedLocalizer, IStateObserver stateObserver)
         {
             _addressService = addressService;
@@ -41,6 +42,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         }
         /// <summary>
         /// Get address details based on the 
+        /// unique address id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

@@ -136,7 +136,7 @@ namespace TitanTemplate.titanaddressapi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "titan-address-api API V1");
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "titan-address-api API V1");
             });
             app.UseHealthChecks("/health/live", new HealthCheckOptions()
             {

@@ -19,8 +19,8 @@ namespace TitanTemplate.titanaddressapi.Entities
         public string PostalCode { get; set; }
         public string StateCode { get; set; }
         public string CountryCode { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         public string ContactNumber { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

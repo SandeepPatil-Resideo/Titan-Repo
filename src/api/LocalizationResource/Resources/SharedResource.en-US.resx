@@ -171,8 +171,14 @@
   <data name="Address_Latitude_Invalid" xml:space="preserve">
     <value>INVALID_LATITUDE</value>
   </data>
+  <data name="Address_Latitude_Required" xml:space="preserve">
+    <value>LATITUDE_REQUIRED</value>
+  </data>
   <data name="Address_Longitude_Invalid" xml:space="preserve">
     <value>INVALID_LONGITUDE</value>
+  </data>
+  <data name="Address_Longitude_Required" xml:space="preserve">
+    <value>LONGITUDE_REQUIRED</value>
   </data>
   <data name="Address_PostalCode_MaxLength" xml:space="preserve">
     <value>POSTALCODE_MAXIMUM_LENGTH_ALLOWED_IS_10</value>
