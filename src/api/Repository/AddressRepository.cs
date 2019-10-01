@@ -48,11 +48,7 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<int> DeleteAddress(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a=>a.Uuid== uniqueAddressId).FirstOrDefaultAsync();
-            if(address==null)
-            {
-                throw new TitanCustomException(500, "Address not found");
-            }
+            var address = await _addressEntity.Where(a=>a.Uuid== uniqueAddressId).FirstOrDefaultAsync();            
             _addressContext.Remove(address);
              return await _addressContext.SaveChangesAsync();  
         }
@@ -64,13 +60,12 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<Address> GetAddressById(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a => a.Uuid == uniqueAddressId).FirstOrDefaultAsync();
-            if (address == null)
-            {
-                throw new TitanCustomException(404, "Address not found");
-            }
+            var address = await _addressEntity.Where(a => a.Uuid == uniqueAddressId).FirstOrDefaultAsync();           
             return _mapper.Map<Address>(address);
         }
+
+
+
         /// <summary>
         /// Update address entity
         /// </summary>
@@ -79,11 +74,7 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<Address> UpdateAddress(Guid uniqueAddressId, Address address)
         {
-            var addressEntity = _addressEntity.SingleOrDefault(a => a.Uuid == uniqueAddressId);
-            if(addressEntity == null)
-            {
-                throw new TitanCustomException(404, "Address not found");
-            }
+            var addressEntity = _addressEntity.SingleOrDefault(a => a.Uuid == uniqueAddressId);            
             addressEntity.AddressLine1 = address.AddressLine1;
             addressEntity.AddressLine2 = address.AddressLine2;
             addressEntity.AddressLine3 = address.AddressLine3;
@@ -97,6 +88,10 @@ namespace TitanTemplate.titanaddressapi.Repository
             await _addressContext.SaveChangesAsync();           
             return await GetAddressById(uniqueAddressId);
         }
+
+
+
+
         /// <summary>
         /// Check the address id is available in the entity
         /// </summary>
