@@ -26,9 +26,9 @@ pipeline {
 		CODE_COVERAGE_EXCLUSIONS = "[xunit.runner.utility.netcoreapp10]*%2c[xunit.runner.visualstudio.dotnetcore.testadapter]*%2c[xunit.runner.reporters.netcoreapp10]*%2c[*]*Program*%2c[*]*Startup*%2c[*]*SerilogFilterPropertiesEnricher*"
         CODE_COVERAGE_INCLUSIONS = "*.*"
         KUBERNETES_YAML_FILE = "${WORKSPACE}/address.yml"
-        sonarQubeProjectKey='TITSMS'
-        sonarQubeComponentId='AW1iA7VgnrOJ2TIcW0i3'
-        sonarQubeProjectName='TitanUFC-Pro-Address'
+        sonarQubeProjectKey='TUFCA'
+        sonarQubeComponentId='AW2Fhw6tnrOJ2TIcXlGD'
+        sonarQubeProjectName='Titan-UFC-Address'
         CONTAINER_IMAGE_NAME = "titan-ufc-address"
         BLACKDUCK_PUREPROJECT = ""
         protecodeSC_ApplicationToUpload = "${WORKSPACE}/build/titan-ufc-address"

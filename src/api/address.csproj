@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>TitanTemplate.titanaddressapi</RootNamespace>
     <AssemblyName>address</AssemblyName>
+    <ProjectGuid>{C00C47B8-B849-4861-A44B-60912D5C9CCB}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
