@@ -29,12 +29,15 @@ namespace TitanTemplate.titanaddressapi.Helpers
         /// <returns></returns>
         public static bool CheckLatitude(string lalitude)
         {
-            bool retVal = true;            
+            bool retVal = false;
+
+
+            
             var latitudeRegx = @"^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$";
 
             if (!string.IsNullOrEmpty(lalitude))
             {
-                retVal = !System.Text.RegularExpressions.Regex.IsMatch(lalitude, latitudeRegx);
+                retVal = System.Text.RegularExpressions.Regex.IsMatch(lalitude, latitudeRegx);
             }
             return retVal;
         }
@@ -45,12 +48,12 @@ namespace TitanTemplate.titanaddressapi.Helpers
         /// <returns></returns>
         public static bool CheckLongitude(string longitude)
         {
-            bool retVal = true;
-            var longitudeRegx = @"^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9] [0-9]|1[0-7] [0-9])(?:(?:\.[0-9]{1,6})?))$";
+            bool retVal = false;
+            var longitudeRegx = @"^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$";
 
             if (!string.IsNullOrEmpty(longitude))
             {
-                retVal = !System.Text.RegularExpressions.Regex.IsMatch(longitude, longitudeRegx);
+                retVal = System.Text.RegularExpressions.Regex.IsMatch(longitude, longitudeRegx);
             }
             return retVal;
         }

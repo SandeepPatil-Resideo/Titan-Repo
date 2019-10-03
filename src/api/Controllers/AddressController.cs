@@ -77,12 +77,12 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Address>> Post([FromBody]Address address)
         {
+            if (address == null)
+            {
+                throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
+            }
             try
             {
-                if (address == null)
-                {
-                    throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
-                }
                 address.Uuid = Guid.NewGuid();
                 Address addressResult = await _addressService.CreateAddress(address);
                 StateObserver.Success();

@@ -88,12 +88,12 @@ namespace TitanTemplate.titanaddressapi.Models
 
             RuleFor(m => ValidationHelper.CheckLatitude(m.Latitude.ToString()))
             .NotEqual(false)
-            .WithErrorCode(ErrorTypes.RequiredError.ToString())
+            .WithErrorCode(ErrorTypes.InvalidNumberError.ToString())
             .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Latitude_Invalid]);
 
             RuleFor(m => ValidationHelper.CheckLongitude(m.Longitude.ToString()))
          .NotEqual(false)
-         .WithErrorCode(ErrorTypes.RequiredError.ToString())
+         .WithErrorCode(ErrorTypes.InvalidNumberError.ToString())
          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Invalid]);
 
         }
