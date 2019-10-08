@@ -13,7 +13,7 @@ namespace TitanTemplate.titanaddressapi.Repository
     /// <summary>
     /// Address repository 
     /// </summary>
-    public class AddressRepository:IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
         private readonly AddressContext _addressContext;
         private readonly DbSet<AddressEntity> _addressEntity;

@@ -1,0 +1,14 @@
+﻿{
+  "addressId": "1",
+  "contactName": "Suamnth",
+  "addressLine1": "Address Test Line 1",
+  "addressLine2": "Address Test Line 2",
+  "addressLine3": "Address Test Line 3",
+  "city": "Bangalore",
+  "postalCode": "560103",
+  "stateCode": "29",
+  "countryCode": "+91",
+  "latitude": "17.231",
+  "longitude": "78.123",
+  "contactNumber": "7075808080"
+}
