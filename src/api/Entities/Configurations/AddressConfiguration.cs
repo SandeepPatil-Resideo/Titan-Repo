@@ -11,10 +11,10 @@ namespace TitanTemplate.titanaddressapi.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<AddressEntity> builder)
         {
-            builder.ToTable("Address", "Address");
+            builder.ToTable("Address", "ADDRESS");
 
-            builder.HasIndex(e => e.Uuid)
-                .HasName("UK_UUID")
+            builder.HasIndex(e => e.AddressId)
+                .HasName("UK_AddressId")
                 .IsUnique();
 
             builder.Property(e => e.AddressLine1).HasMaxLength(255);
@@ -39,13 +39,13 @@ namespace TitanTemplate.titanaddressapi.Entities.Configurations
 
             builder.Property(e => e.Longitude).HasMaxLength(100);
 
-            builder.Property(e => e.PostalCode).HasMaxLength(10);
+            builder.Property(e => e.ZipPostalCode).HasMaxLength(10);
 
-            builder.Property(e => e.StateCode).HasMaxLength(3);
+            builder.Property(e => e.StateProvinceRegion).HasMaxLength(3);
 
             builder.Property(e => e.UpdatedOn).HasColumnType("datetime");
 
-            builder.Property(e => e.Uuid).HasColumnName("UUID");
+            builder.Property(e => e.AddressId).HasColumnName("AddressId");
         }
     }
 }

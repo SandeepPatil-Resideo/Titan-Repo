@@ -14,19 +14,26 @@ namespace TitanTemplate.titanaddressapi.Models
         /// <summary>
         /// Primary key of the user address
         /// </summary>
-        [JsonProperty("addressId")]   
+        [JsonProperty("id")]   
         [JsonIgnore]
-        public int AddressId { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Unique guid to get the address
         /// </summary>
-        [JsonProperty("uniqueAddressId")]
-        public Guid Uuid { get; set; }
+        [JsonProperty("addressId")]
+        public Guid AddressId { get; set; }
         /// <summary>
         /// contactName
         /// </summary>
         [JsonProperty("contactName")]
         public string ContactName { get; set; }
+
+        /// <summary>
+        /// contactName
+        /// </summary>
+        [JsonProperty("mailingAddressName")]
+        public string MailingAddressName { get; set; }
+
         /// <summary>
         /// contactNumber
         /// </summary>
@@ -55,13 +62,13 @@ namespace TitanTemplate.titanaddressapi.Models
         /// <summary>
         /// Zipcode 
         /// </summary>
-        [JsonProperty("postalCode")]
-        public string PostalCode { get; set; }
+        [JsonProperty("zipPostalCode")]
+        public string ZipPostalCode { get; set; }
         /// <summary>
         /// State code like "NY"
         /// </summary>
-        [JsonProperty("stateCode")]
-        public string StateCode { get; set; }
+        [JsonProperty("stateProvinceRegion")]
+        public string StateProvinceRegion { get; set; }
         /// <summary>
         /// Country code like "USA"
         /// </summary>
@@ -77,6 +84,10 @@ namespace TitanTemplate.titanaddressapi.Models
         /// </summary>
         [JsonProperty("longitude")]
         public decimal Longitude { get; set; }
-     
+        /// <summary>
+        /// Validate and update the status
+        /// </summary>
+        [JsonProperty("isValidated")]
+        public bool IsValidated { get; set; }
     }
 }

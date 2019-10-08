@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Titan.Common.Diagnostics.State;
 using Titan.Common.Services.Auditing.AspNetCore;
+using Titan.UFC.Common.ExceptionMiddleWare;
 using TitanTemplate.titanaddressapi.Diagnostics;
 using TitanTemplate.titanaddressapi.Entities;
 using TitanTemplate.titanaddressapi.LocalizationResource;
@@ -64,7 +65,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [TitanAudit("Get request with {address id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Address>> Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
             Address address = await _addressService.GetAddressById(id);
             return Ok(address);
@@ -75,7 +76,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [TitanAudit("Post equest with address object")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Address>> Post([FromBody]Address address)
+        public async Task<IActionResult> Post([FromBody]Address address)
         {
             if (address == null)
             {
@@ -83,7 +84,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
             }
             try
             {
-                address.Uuid = Guid.NewGuid();
+                address.AddressId = Guid.NewGuid();
                 Address addressResult = await _addressService.CreateAddress(address);
                 StateObserver.Success();
                 return Ok(addressResult);
@@ -102,17 +103,21 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Address>> Put(string id, [FromBody]Address address)
+        public async Task<IActionResult> Put(string id, [FromBody]Address address)
         {
+            if (address == null)
+            {
+                throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
+            }
             try
             {
-                if (address == null)
-                {
-                    throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
-                }
                 Address updateAddress = await _addressService.UpdateAddress(id, address);
                 StateObserver.Success();
                 return Ok(updateAddress);
+            }
+            catch(TitanCustomException titanCustomException)
+            {
+                throw titanCustomException;
             }
             catch (Exception e)
             {
@@ -127,7 +132,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [TitanAudit("Delete request with {address id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             await _addressService.DeleteAddress(id);
             return NoContent();
@@ -135,7 +140,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [HttpPatch("{id}", Name = "Address_Patch")]
         public async Task<IActionResult> Patch(string id, [FromBody]JsonPatchDocument<Address> addressPatch)
         {
-            AddressEntity addressEntity = _addressEntity.SingleOrDefault(a => a.Uuid == Guid.Parse(id));
+            AddressEntity addressEntity = _addressEntity.SingleOrDefault(a => a.AddressId == Guid.Parse(id));
             Address address = _mapper.Map<Address>(addressEntity);
             addressPatch.ApplyTo(address);
             _mapper.Map(address, addressEntity);

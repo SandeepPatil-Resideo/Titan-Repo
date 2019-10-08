@@ -48,7 +48,7 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<int> DeleteAddress(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a=>a.Uuid== uniqueAddressId).FirstOrDefaultAsync();            
+            var address = await _addressEntity.Where(a=>a.AddressId== uniqueAddressId).FirstOrDefaultAsync();            
             _addressContext.Remove(address);
              return await _addressContext.SaveChangesAsync();  
         }
@@ -60,7 +60,7 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<Address> GetAddressById(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a => a.Uuid == uniqueAddressId).FirstOrDefaultAsync();           
+            var address = await _addressEntity.Where(a => a.AddressId == uniqueAddressId).FirstOrDefaultAsync();           
             return _mapper.Map<Address>(address);
         }
 
@@ -74,16 +74,16 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<Address> UpdateAddress(Guid uniqueAddressId, Address address)
         {
-            var addressEntity = _addressEntity.SingleOrDefault(a => a.Uuid == uniqueAddressId);            
+            var addressEntity = _addressEntity.SingleOrDefault(a => a.AddressId == uniqueAddressId);            
             addressEntity.AddressLine1 = address.AddressLine1;
             addressEntity.AddressLine2 = address.AddressLine2;
             addressEntity.AddressLine3 = address.AddressLine3;
             addressEntity.AddressLine3 = address.AddressLine3;
             addressEntity.City = address.City;
-            addressEntity.StateCode = address.StateCode;
+            addressEntity.StateProvinceRegion = address.StateProvinceRegion;
             addressEntity.CountryCode = address.CountryCode;
             addressEntity.ContactName = address.ContactName;
-            addressEntity.PostalCode = address.PostalCode;
+            addressEntity.ZipPostalCode = address.ZipPostalCode;
             _addressContext.Update(addressEntity);
             await _addressContext.SaveChangesAsync();           
             return await GetAddressById(uniqueAddressId);
@@ -99,12 +99,11 @@ namespace TitanTemplate.titanaddressapi.Repository
         /// <returns></returns>
         public async Task<bool> CheckAddressId(Guid uniqueAddressId)
         {
-            var addressEntity =await _addressEntity.SingleOrDefaultAsync(a => a.Uuid == uniqueAddressId);
+            var addressEntity = await _addressEntity.SingleOrDefaultAsync(a => a.AddressId == uniqueAddressId);
             if (addressEntity == null)
             {
                 return false;
             }
-
             return true;
         }
     }
