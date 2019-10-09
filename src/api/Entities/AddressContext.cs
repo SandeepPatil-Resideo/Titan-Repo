@@ -25,9 +25,7 @@ namespace TitanTemplate.titanaddressapi.Entities
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AddressConfiguration());
-
-           
+            modelBuilder.ApplyConfiguration(new AddressConfiguration()); 
         }
     }
 }

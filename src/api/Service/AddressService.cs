@@ -35,7 +35,7 @@ namespace TitanTemplate.titanaddressapi.Service
         /// <param name="address"></param>
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
-        {  
+        {
             return await _addressRepository.CreateAddress(address);
         }
         /// <summary>
