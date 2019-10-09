@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TitanTemplate.titanaddressapi.Entities
 {
-    [Table("Address", Schema = "Address")]
+    [Table("PartnerAddress", Schema = "Address")]
     public partial class AddressEntity
     {
         [Key]
