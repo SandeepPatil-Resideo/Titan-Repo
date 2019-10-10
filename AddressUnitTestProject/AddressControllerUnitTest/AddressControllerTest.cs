@@ -76,7 +76,7 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
 
         public static AddressEntity addressEntityMockData => new AddressEntity
         {
-            Id = 1,
+            ID = 1,
             AddressId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
             AddressLine1 = "Address Test Line 1",
