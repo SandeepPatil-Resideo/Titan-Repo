@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{8C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddressUnitTest", "AddressUnitTest", "{1B6AC381-FE14-4450-93E2-E8F8D85BC8D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressUnitTestProject", "AddressUnitTestProject\AddressUnitTestProject.csproj", "{BB1797A2-987F-44FB-8C06-B616C46659BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressUnitTestProject", "AddressUnitTestProject\AddressUnitTestProject.csproj", "{BB1797A2-987F-44FB-8C06-B616C46659BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
