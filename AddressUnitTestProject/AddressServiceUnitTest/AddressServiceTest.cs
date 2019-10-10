@@ -85,7 +85,7 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
         public class Update : AddressServiceTest
         {
             [Fact]
-            public async void should_create_address()
+            public async void should_update_address()
             {
                 var expectedAddressObj = addressMockData;
                 var check_result = true;

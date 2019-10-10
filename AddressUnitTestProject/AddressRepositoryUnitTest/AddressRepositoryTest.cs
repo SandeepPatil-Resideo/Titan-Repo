@@ -139,7 +139,6 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
-
                 var result = await addressRepositoryUndertest.UpdateAddress(address.AddressId, address);
                 Assert.Equal(addressMockData, result);
             }

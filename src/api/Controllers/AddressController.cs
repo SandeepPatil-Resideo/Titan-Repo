@@ -67,8 +67,15 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            Address address = await _addressService.GetAddressById(id);
-            return Ok(address);
+            try
+            {
+                Address address = await _addressService.GetAddressById(id);
+                return Ok(address);
+            }
+            catch(TitanCustomException titanCustomException)
+            {
+                throw titanCustomException;
+            }
         }
 
         // POST api/<controller>

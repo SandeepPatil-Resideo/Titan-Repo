@@ -15,6 +15,7 @@ using TitanTemplate.titanaddressapi.Controllers;
 using TitanTemplate.titanaddressapi.Entities;
 using TitanTemplate.titanaddressapi.LocalizationResource;
 using TitanTemplate.titanaddressapi.Models;
+using TitanTemplate.titanaddressapi.Repository;
 using TitanTemplate.titanaddressapi.Service;
 using Xunit;
 
@@ -105,6 +106,21 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
                 var okResult = Assert.IsType<OkObjectResult>(result);
                 Assert.Equal(200, okResult.StatusCode);
             }
+            [Fact]
+            public async void should_return_null_if_addressId_does_not_exists()
+            {
+                string invalidAddressId = null;
+                var LoggerMock = new Mock<ILogger<AddressController>>();
+                addressServiceMock.Setup(s => s.GetAddressById(invalidAddressId)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Not Found"));
+                try
+                {
+                    var result = await addressControllerUnderTest.Get(invalidAddressId);
+                }
+                catch(TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
+            }
         }
 
         public class Put : AddressControllerTest
@@ -124,10 +140,11 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
             public async void should_return_null_for_invalid_addressId()
             {
                 var expectedAddressObj = addressMockData;
-                var invalidAddressId = -1;
+                string invalidAddressId = null;
                 var LoggerMock = new Mock<ILogger<AddressController>>();
-                addressServiceMock.Setup(s => s.UpdateAddress(invalidAddressId.ToString(), addressMockData)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Doesn't Exists"));
-                var result = await addressControllerUnderTest.Put(invalidAddressId.ToString(), addressMockData);
+                addressServiceMock.Setup(s => s.UpdateAddress(invalidAddressId, addressMockData)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Doesn't Exists"));
+                
+                var result = await addressControllerUnderTest.Put(invalidAddressId, addressMockData);
                 Assert.IsType<TitanCustomException>(result);
             }
         }
@@ -158,6 +175,8 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
                 var okResult = Assert.IsType<OkObjectResult>(result);
                 Assert.Equal(200, okResult.StatusCode);
             }
+
+
         }
     }
 }
