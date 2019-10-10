@@ -75,5 +75,22 @@ namespace TitanTemplate.titanaddressapi.Helpers
 
             return retVal;
         }
+        /// <summary>
+        /// Check maximum length for a string
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="minLength"></param>
+        /// <returns></returns>
+        public static bool CheckMinimumLength(string content, int minLength)
+        {
+            bool retVal = true;
+
+            if (!string.IsNullOrEmpty(content) && content.Length < minLength)
+            {
+                retVal = false;
+            }
+
+            return retVal;
+        }
     }
 }

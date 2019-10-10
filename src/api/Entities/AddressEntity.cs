@@ -24,6 +24,7 @@ namespace TitanTemplate.titanaddressapi.Entities
         public decimal? Longitude { get; set; }
         public string ContactNumber { get; set; }
         public bool? IsValidated { get; set; }
+        public bool? IsPrimary { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
 
