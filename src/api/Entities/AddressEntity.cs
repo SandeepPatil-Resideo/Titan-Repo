@@ -5,11 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TitanTemplate.titanaddressapi.Entities
 {
-    [Table("Address", Schema = "Address")]
+    [Table("PartnerAddress", Schema = "ADDRESS")]
     public partial class AddressEntity
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
         public Guid AddressId { get; set; }
         public string ContactName { get; set; }
         public string MailingAddressName { get; set; }
@@ -24,6 +24,7 @@ namespace TitanTemplate.titanaddressapi.Entities
         public decimal? Longitude { get; set; }
         public string ContactNumber { get; set; }
         public bool? IsValidated { get; set; }
+        public bool? IsPrimary { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
 

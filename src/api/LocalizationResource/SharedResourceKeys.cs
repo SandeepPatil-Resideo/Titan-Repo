@@ -34,6 +34,17 @@ namespace TitanTemplate.titanaddressapi.LocalizationResource
         public static readonly string Address_Latitude_Required = "Address_Latitude_Required";
         public static readonly string Address_Longitude_Required = "Address_Longitude_Required";
 
+
+        public static readonly string Address_PostalCode_MaxLength = "Address_PostalCode_MaxLength";
+        public static readonly string Address_PostalCode_MinLength = "Address_PostalCode_MinLength";
+        
+
+        public static readonly string Address_StateCode_MaxLength = "Address_StateCode_MaxLength";
+        public static readonly string Address_StateCode_MinLength = "Address_StateCode_MinLength";
+        
+
+        
+
         #endregion
     }
 }

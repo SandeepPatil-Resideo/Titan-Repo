@@ -88,6 +88,11 @@ namespace TitanTemplate.titanaddressapi.Models
         /// Validate and update the status
         /// </summary>
         [JsonProperty("isValidated")]
-        public bool IsValidated { get; set; }
+        public bool? IsValidated { get; set; }
+        /// <summary>
+        /// set address is primary or not
+        /// </summary>
+        [JsonProperty("isPrimary")]
+        public bool? IsPrimary { get; set; }
     }
 }

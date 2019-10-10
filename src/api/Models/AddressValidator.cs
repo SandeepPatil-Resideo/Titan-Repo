@@ -96,6 +96,28 @@ namespace TitanTemplate.titanaddressapi.Models
          .WithErrorCode(ErrorTypes.InvalidNumberError.ToString())
          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Invalid]);
 
+
+            RuleFor(m => ValidationHelper.CheckMaximumLength(m.StateProvinceRegion, 3))
+              .NotEqual(false)
+              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MaxLength]);
+
+            RuleFor(m => ValidationHelper.CheckMinimumLength(m.StateProvinceRegion,2))
+              .NotEqual(false)
+              .WithErrorCode(ErrorTypes.MinLengthError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MinLength]);
+
+
+            RuleFor(m => ValidationHelper.CheckMaximumLength(m.ZipPostalCode, 5))
+              .NotEqual(false)
+              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MaxLength]);
+
+            RuleFor(m => ValidationHelper.CheckMinimumLength(m.ZipPostalCode, 10))
+              .NotEqual(false)
+              .WithErrorCode(ErrorTypes.MinLengthError.ToString())
+              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MinLength]);
+
         }
     }
 }

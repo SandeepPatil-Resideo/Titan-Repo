@@ -84,6 +84,8 @@ namespace TitanTemplate.titanaddressapi.Repository
             addressEntity.CountryCode = address.CountryCode;
             addressEntity.ContactName = address.ContactName;
             addressEntity.ZipPostalCode = address.ZipPostalCode;
+            addressEntity.IsValidated = address.IsValidated;
+            addressEntity.IsPrimary = address.IsPrimary;
             _addressContext.Update(addressEntity);
             await _addressContext.SaveChangesAsync();           
             return await GetAddressById(uniqueAddressId);
