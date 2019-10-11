@@ -36,7 +36,14 @@ namespace TitanTemplate.titanaddressapi.Service
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
         {
-            return await _addressRepository.CreateAddress(address);
+            try
+            {
+                return await _addressRepository.CreateAddress(address);
+            }
+            catch(ArgumentNullException argumentNullException)
+            {
+                throw argumentNullException;
+            }
         }
         /// <summary>
         /// Delete the address information against

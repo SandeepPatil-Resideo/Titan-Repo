@@ -142,10 +142,32 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
                 var expectedAddressObj = addressMockData;
                 string invalidAddressId = null;
                 var LoggerMock = new Mock<ILogger<AddressController>>();
-                addressServiceMock.Setup(s => s.UpdateAddress(invalidAddressId, addressMockData)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Doesn't Exists"));
-                
-                var result = await addressControllerUnderTest.Put(invalidAddressId, addressMockData);
-                Assert.IsType<TitanCustomException>(result);
+                addressServiceMock.Setup(s => s.UpdateAddress(invalidAddressId, expectedAddressObj)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Doesn't Exists"));
+                try
+                {
+                    var result = await addressControllerUnderTest.Put(invalidAddressId, expectedAddressObj);
+                }
+                catch(TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
+            }
+
+            [Fact]
+            public async void should_return_null_for_invalid_address()
+            {
+                Address expectedAddressObj = null;
+                string invalidAddressId = "9245fe4a-d402-451c-b9ed-9c1a04247482";
+                var LoggerMock = new Mock<ILogger<AddressController>>();
+                //addressServiceMock.Setup(s => s.UpdateAddress(invalidAddressId, expectedAddressObj)).Throws(new ArgumentNullException("Address is Null"));
+                try
+                {
+                    var result = await addressControllerUnderTest.Put(invalidAddressId, expectedAddressObj);
+                }
+                catch (ArgumentNullException argumentNullException)
+                {
+                    Assert.IsType<ArgumentNullException>(argumentNullException);
+                }
             }
         }
 
@@ -161,6 +183,21 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
                 var okResult = Assert.IsType<NoContentResult>(result);
                 Assert.Equal(204, okResult.StatusCode);
             }
+            [Fact]
+            public async void should_return_exception__if_addressId_does_not_exists()
+            {
+                string invalidAddressId = null;
+                var LoggerMock = new Mock<ILogger<AddressController>>();
+                addressServiceMock.Setup(s => s.DeleteAddress(invalidAddressId)).Throws(new TitanCustomException(StatusCodes.Status404NotFound, "Address Doesn't Exists"));
+                try
+                {
+                    var result = await addressControllerUnderTest.Delete(invalidAddressId);
+                }
+                catch (TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
+            }
         }
 
         public class Post : AddressControllerTest
@@ -170,13 +207,27 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
             {
                 var expectedAddressObj = addressMockData;
                 var LoggerMock = new Mock<ILogger<AddressController>>();
-                addressServiceMock.Setup(s => s.CreateAddress(addressMockData)).Returns(Task.FromResult(expectedAddressObj));
-                var result = await addressControllerUnderTest.Post(addressMockData);
+                addressServiceMock.Setup(s => s.CreateAddress(expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
+                var result = await addressControllerUnderTest.Post(expectedAddressObj);
                 var okResult = Assert.IsType<OkObjectResult>(result);
                 Assert.Equal(200, okResult.StatusCode);
             }
 
-
+            [Fact]
+            public async void should_return_null_if_address_does_not_exists()
+            {
+                Address expectedAddressObj = null;
+                var LoggerMock = new Mock<ILogger<AddressController>>();
+                //addressServiceMock.Setup(s => s.CreateAddress(expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
+                try
+                {
+                    var result = await addressControllerUnderTest.Post(expectedAddressObj);
+                }
+                catch (ArgumentNullException argumentNullException)
+                {
+                    Assert.IsType<ArgumentNullException>(argumentNullException);
+                }
+            }
         }
     }
 }

@@ -96,6 +96,10 @@ namespace TitanTemplate.titanaddressapi.Controllers
                 StateObserver.Success();
                 return Ok(addressResult);
             }
+            catch(TitanCustomException titanCustomException)
+            {
+                throw titanCustomException;
+            }
             catch (Exception e)
             {
                 StateObserver.Failure(e);
@@ -141,8 +145,15 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(string id)
         {
-            await _addressService.DeleteAddress(id);
-            return NoContent();
+            try
+            {
+                await _addressService.DeleteAddress(id);
+                return NoContent();
+            }
+            catch(TitanCustomException titanCustomException)
+            {
+                throw titanCustomException;
+            }
         }
         [HttpPatch("{id}", Name = "Address_Patch")]
         public async Task<IActionResult> Patch(string id, [FromBody]JsonPatchDocument<Address> addressPatch)
