@@ -13,15 +13,15 @@ using Microsoft.Extensions.Localization;
 using Titan.Common.Diagnostics.State;
 using Titan.Common.Services.Auditing.AspNetCore;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using TitanTemplate.titanaddressapi.Diagnostics;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.LocalizationResource;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.Service;
+using Titan.Ufc.Addresses.API.Diagnostics;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.Resources;
+using Titan.Ufc.Addresses.API.Models;
+using Titan.Ufc.Addresses.API.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace TitanTemplate.titanaddressapi.Controllers
+namespace Titan.Ufc.Addresses.API.Controllers
 {
     /// <summary>
     /// Address Controller class
@@ -31,7 +31,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
-        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
+        private readonly ISharedResource _sharedLocalizer;
         protected IStateObserver StateObserver { get; }
         private readonly IMapper _mapper;
         private readonly AddressContext _addressContext;
@@ -44,7 +44,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
         /// <param name="stateObserver"></param>
         /// <param name="mapper"></param>
         /// <param name="addressContext"></param>
-        public AddressController(IAddressService addressService, IStringLocalizer<SharedResource> sharedLocalizer, 
+        public AddressController(IAddressService addressService, ISharedResource sharedLocalizer, 
             IStateObserver stateObserver, IMapper mapper, AddressContext addressContext)
         {
             _addressService = addressService;
@@ -67,6 +67,11 @@ namespace TitanTemplate.titanaddressapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id)
         {
+            Guid  yourGuid;
+            if (!Guid.TryParse(id, out yourGuid))
+            {
+                throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Guid_Input_Validation]);
+            }
             Address address = await _addressService.GetAddressById(id);
             return Ok(address);
         }
@@ -148,5 +153,7 @@ namespace TitanTemplate.titanaddressapi.Controllers
             await _addressContext.SaveChangesAsync();
             return Ok(address);
         }
+
+       
     }
 }

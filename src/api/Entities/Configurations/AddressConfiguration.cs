@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TitanTemplate.titanaddressapi.Entities.Configurations
+namespace Titan.Ufc.Addresses.API.Entities.Configurations
 {
     public class AddressConfiguration : IEntityTypeConfiguration<AddressEntity>
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace TitanTemplate.titanaddressapi.LocalizationResource
+namespace Titan.Ufc.Addresses.API.Resources
 {
     /// <summary>
     /// Resource keys to find the localization
@@ -41,9 +41,11 @@ namespace TitanTemplate.titanaddressapi.LocalizationResource
 
         public static readonly string Address_StateCode_MaxLength = "Address_StateCode_MaxLength";
         public static readonly string Address_StateCode_MinLength = "Address_StateCode_MinLength";
-        
 
-        
+        public static readonly string Guid_Input_Validation = "Guid_Input_Validation";
+
+
+
 
         #endregion
     }

@@ -18,16 +18,17 @@ using System.Reflection;
 using Titan.Common.Configuration.ContainerSecrets;
 using Titan.Common.Diagnostics.State;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using TitanTemplate.titanaddressapi.Configuration;
-using TitanTemplate.titanaddressapi.Diagnostics;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.HealthChecks;
-using TitanTemplate.titanaddressapi.Mapper;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.Repository;
-using TitanTemplate.titanaddressapi.Service;
+using Titan.Ufc.Addresses.API.Configuration;
+using Titan.Ufc.Addresses.API.Diagnostics;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.HealthChecks;
+using Titan.Ufc.Addresses.API.Mapper;
+using Titan.Ufc.Addresses.API.Models;
+using Titan.Ufc.Addresses.API.Repository;
+using Titan.Ufc.Addresses.API.Service;
+using Titan.Ufc.Addresses.API.Resources;
 
-namespace TitanTemplate.titanaddressapi
+namespace Titan.Ufc.Addr.API
 {
     public class Startup
     {
@@ -146,6 +147,7 @@ namespace TitanTemplate.titanaddressapi
             {
                 Predicate = check => check.Name == "Readiness"
             });
+            app.UseRequestLocalization();
         }
 
         public void SetupStateObserverLogging()
@@ -166,9 +168,10 @@ namespace TitanTemplate.titanaddressapi
         /// <returns></returns>
         public static IServiceCollection InjectServiceDependency(this IServiceCollection services)
         {
+            services.AddSingleton<ISharedResource, SharedResource>();
             services.AddScoped<IAddressValidator, AddressValidator>();
             services.AddScoped<IAddressService, AddressService>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();            
             return services;
         }
     }

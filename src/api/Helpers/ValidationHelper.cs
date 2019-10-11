@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TitanTemplate.titanaddressapi.Helpers
+namespace Titan.Ufc.Addresses.API.Helpers
 {
     public static class ValidationHelper
     {

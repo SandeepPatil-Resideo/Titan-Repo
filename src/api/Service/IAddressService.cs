@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TitanTemplate.titanaddressapi.Models;
+using Titan.Ufc.Addresses.API.Models;
 
-namespace TitanTemplate.titanaddressapi.Service
+namespace Titan.Ufc.Addresses.API.Service
 {
     public interface IAddressService
     {

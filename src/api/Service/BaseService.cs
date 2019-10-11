@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TitanTemplate.titanaddressapi.Service
+namespace Titan.Ufc.Addresses.API.Service
 {
     public class BaseService
     {

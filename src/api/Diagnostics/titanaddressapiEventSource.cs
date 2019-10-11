@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Tracing;
 
-namespace TitanTemplate.titanaddressapi.Diagnostics
+namespace Titan.Ufc.Addresses.API.Diagnostics
 {
     [EventSource(Name = "titanaddressapi")]
     public class titanaddressapiEventSource : EventSource

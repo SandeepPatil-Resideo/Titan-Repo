@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RootNamespace>TitanTemplate.titanaddressapi</RootNamespace>
-    <AssemblyName>address</AssemblyName>
+    <RootNamespace>Titan.Ufc.Addresses.API</RootNamespace>
+    <AssemblyName>Titan.Ufc.Addresses.API</AssemblyName>
     <ProjectGuid>{C00C47B8-B849-4861-A44B-60912D5C9CCB}</ProjectGuid>
   </PropertyGroup>
 

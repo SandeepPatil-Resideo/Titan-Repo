@@ -3,10 +3,10 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Titan.Common.Diagnostics.State;
-using TitanTemplate.titanaddressapi.Diagnostics;
+using Titan.Ufc.Addresses.API.Diagnostics;
 using Titan.Common.Services.Auditing.AspNetCore;
 
-namespace TitanTemplate.titanaddressapi.Controllers
+namespace Titan.Ufc.Addresses.API.Controllers
 {
     [Route("api/Test")]
     public class TestController : Controller
