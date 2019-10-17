@@ -15,7 +15,7 @@ pipeline {
     environment {
         // // // VARIABLES TO MODIFY - BEGIN // // //
         PROJECT_PATH = "${WORKSPACE}/src/api"
-        PROJECT_FILE_NAME = "${PROJECT_PATH}/address.csproj"
+        PROJECT_FILE_NAME = "${PROJECT_PATH}/Titan.Ufc.Addresses.API.csproj"
         DOCKER_FILE_PATH = "${PROJECT_PATH}"
         DOTNETPUBLISH_RUNTIME = "linux-musl-x64"
         DOTNET_BUILD_OUTPUT = "${PROJECT_PATH}/published"
