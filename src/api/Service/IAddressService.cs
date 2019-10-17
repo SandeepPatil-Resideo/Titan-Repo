@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Titan.Ufc.Addresses.API.Models;
 
 namespace Titan.Ufc.Addresses.API.Service
 {
+    /// <summary>
+    /// Address Interface
+    /// </summary>
     public interface IAddressService
     {
         /// <summary>

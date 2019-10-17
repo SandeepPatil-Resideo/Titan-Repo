@@ -35,7 +35,21 @@ namespace Titan.Ufc.Addresses.API.Service
         /// <param name="address"></param>
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
-        {  
+        {
+            /*
+             * Check the state and country code and state code is available
+             */
+
+            bool countryCodeAvailable = await _addressRepository.CheckCountryCode(address.CountryCode);
+
+            if (!countryCodeAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
+
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if(stateId==-1)
+            {
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }
             return await _addressRepository.CreateAddress(address);
         }
         /// <summary>

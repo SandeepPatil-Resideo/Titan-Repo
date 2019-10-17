@@ -14,14 +14,14 @@ namespace Titan.Ufc.Addresses.API.Models
         /// <summary>
         /// Primary key of the user address
         /// </summary>
-        [JsonProperty("id")]   
+        [JsonProperty("addressId")]   
         [JsonIgnore]
-        public int Id { get; set; }
+        public int AddressID { get; set; }
         /// <summary>
         /// Unique guid to get the address
         /// </summary>
-        [JsonProperty("addressId")]
-        public Guid AddressId { get; set; }
+        [JsonProperty("addressUID")]
+        public Guid AddressUID { get; set; }
         /// <summary>
         /// contactName
         /// </summary>
@@ -43,12 +43,12 @@ namespace Titan.Ufc.Addresses.API.Models
         /// Addressline 1 
         /// </summary>
         [JsonProperty("addressLine1")]
-        public string AddressLine1 { get; set; }
+        public string Address1 { get; set; }
         /// <summary>
         /// Addressline 2
         /// </summary>
         [JsonProperty("addressLine2")]
-        public string AddressLine2 { get; set; }
+        public string Address2 { get; set; }
         /// <summary>
         /// Addressline 3
         /// </summary>
@@ -63,12 +63,12 @@ namespace Titan.Ufc.Addresses.API.Models
         /// Zipcode 
         /// </summary>
         [JsonProperty("zipPostalCode")]
-        public string ZipPostalCode { get; set; }
+        public string PinCode { get; set; }
         /// <summary>
         /// State code like "NY"
         /// </summary>
         [JsonProperty("stateProvinceRegion")]
-        public string StateProvinceRegion { get; set; }
+        public string StateCode { get; set; }
         /// <summary>
         /// Country code like "USA"
         /// </summary>
@@ -87,12 +87,34 @@ namespace Titan.Ufc.Addresses.API.Models
         /// <summary>
         /// Validate and update the status
         /// </summary>
-        [JsonProperty("isValidated")]
-        public bool? IsValidated { get; set; }
+        [JsonProperty("isVerified")]
+        public bool? IsVerified { get; set; }
         /// <summary>
-        /// set address is primary or not
+        /// Set address primary or not
         /// </summary>
         [JsonProperty("isPrimary")]
         public bool? IsPrimary { get; set; }
+        /// <summary>
+        /// Created date of the address
+        /// </summary>
+        [JsonProperty("createdDate")]
+        public DateTime? CreatedDate { get; set; }
+        /// <summary>
+        /// Updated date of the address
+        /// </summary>
+        [JsonProperty("updatedDate")]
+        public DateTime? UpdatedDate { get; set; }
+
+        /// <summary>
+        /// Updated date of the address
+        /// </summary>
+        [JsonProperty("type")]
+        public int Type { get; set; }
+
+        [JsonIgnore]
+        public int StateId { get; set; }
+
+
+
     }
 }

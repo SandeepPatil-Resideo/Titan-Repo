@@ -11,15 +11,12 @@ namespace Titan.Ufc.Addresses.API.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<AddressEntity> builder)
         {
-            builder.ToTable("PartnerAddress", "ADDRESS");
+            builder.ToTable("Address", "dbo");
 
-            builder.HasIndex(e => e.AddressId)
-                .HasName("UK_PartnerAddressId")
-                .IsUnique();
 
-            builder.Property(e => e.AddressLine1).HasMaxLength(255);
+            builder.Property(e => e.Address1).HasMaxLength(255);
 
-            builder.Property(e => e.AddressLine2).HasMaxLength(255);
+            builder.Property(e => e.Address2).HasMaxLength(255);
 
             builder.Property(e => e.AddressLine3).HasMaxLength(255);
 
@@ -33,20 +30,19 @@ namespace Titan.Ufc.Addresses.API.Entities.Configurations
 
             builder.Property(e => e.CountryCode).HasMaxLength(3);
 
-            builder.Property(e => e.CreatedOn).HasColumnType("datetime");
+            builder.Property(e => e.CreatedDate).HasColumnType("datetime");
 
             builder.Property(e => e.Latitude).HasMaxLength(100);
 
             builder.Property(e => e.Longitude).HasMaxLength(100);
 
-            builder.Property(e => e.ZipPostalCode).HasMaxLength(10);
+            builder.Property(e => e.PinCode).HasMaxLength(10);
 
-            builder.Property(e => e.StateProvinceRegion).HasMaxLength(3);
+            builder.Property(e => e.StateID).HasMaxLength(3);
 
-            builder.Property(e => e.UpdatedOn).HasColumnType("datetime");
-            
+            builder.Property(e => e.UpdatedDate).HasColumnType("datetime");            
 
-            builder.Property(e => e.AddressId).HasColumnName("AddressId");
+            builder.Property(e => e.AddressUID).HasColumnName("AddressUID");
         }
     }
 }

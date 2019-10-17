@@ -10,15 +10,14 @@ namespace Titan.Ufc.Addresses.API.Entities
     /// </summary>
     public partial class AddressContext : DbContext
     {
-        
         public AddressContext(DbContextOptions<AddressContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<AddressEntity> Addresses { get; set; }
+        public virtual DbSet<CountryStateEntity> CountryStateEntities { get; set; }
 
-        
         /// <summary>
         /// Model Builder
         /// </summary>
@@ -26,8 +25,7 @@ namespace Titan.Ufc.Addresses.API.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
-
-           
+            modelBuilder.ApplyConfiguration(new CountryStateConfiguration());           
         }
     }
 }

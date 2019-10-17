@@ -198,6 +198,9 @@
   <data name="Address_StateCode_ValidString" xml:space="preserve">
     <value>INVALID_STATE_CODE</value>
   </data>
+  <data name="Address_State_Code_Not_Exist" xml:space="preserve">
+    <value>STATE_CODE_NOT_EXIST</value>
+  </data>
   <data name="Guid_Input_Validation" xml:space="preserve">
     <value>PLEASE_GIVE_VALID_GUID</value>
   </data>

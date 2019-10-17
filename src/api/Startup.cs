@@ -27,29 +27,35 @@ using Titan.Ufc.Addresses.API.Models;
 using Titan.Ufc.Addresses.API.Repository;
 using Titan.Ufc.Addresses.API.Service;
 using Titan.Ufc.Addresses.API.Resources;
+using Honeywell.Security.FrameWork.ReadingConfigurationFile;
 
 namespace Titan.Ufc.Addr.API
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        
         public Settings Settings { get; set; }
         public IStateObserver StateObserver { get; set; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             //Pull config settings from both appsettings.json and environment variables
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddContainerSecrets() //Load env variables from secrets file
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+            //var builder = new ConfigurationBuilder()
+            //    .SetBasePath(env.ContentRootPath)
+            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            //    .AddContainerSecrets() //Load env variables from secrets file
+            //    .AddEnvironmentVariables();
+            //Configuration = builder.Build();
 
+           Configuration = configuration;
+        }
+        public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; private set; }
         public void ConfigureServices(IServiceCollection services)
         {
+            var reader = new ReadingConfiguration();
+            Configuration = reader.ApplyConfigurationFromOrchestrator();
+
             services.AddOptions();
             services.Configure<Settings>(Configuration);
             Settings = Configuration.Get<Settings>();

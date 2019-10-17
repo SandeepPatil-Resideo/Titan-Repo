@@ -67,11 +67,7 @@ namespace Titan.Ufc.Addresses.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            Guid  yourGuid;
-            if (!Guid.TryParse(id, out yourGuid))
-            {
-                throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Guid_Input_Validation]);
-            }
+            CheckValidGuid(id);
             Address address = await _addressService.GetAddressById(id);
             return Ok(address);
         }
@@ -89,10 +85,14 @@ namespace Titan.Ufc.Addresses.API.Controllers
             }
             try
             {
-                address.AddressId = Guid.NewGuid();
+                address.CreatedDate = DateTime.UtcNow;
                 Address addressResult = await _addressService.CreateAddress(address);
                 StateObserver.Success();
                 return Ok(addressResult);
+            }
+            catch(TitanCustomException titanCustomException)
+            {
+                throw titanCustomException;
             }
             catch (Exception e)
             {
@@ -110,6 +110,10 @@ namespace Titan.Ufc.Addresses.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Put(string id, [FromBody]Address address)
         {
+            /*
+             * Check the id is valid guid
+             */ 
+            CheckValidGuid(id);
             if (address == null)
             {
                 throw new ArgumentNullException(MethodBase.GetCurrentMethod().Name, _sharedLocalizer[SharedResourceKeys.Address_Input_Validation]);
@@ -139,13 +143,22 @@ namespace Titan.Ufc.Addresses.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(string id)
         {
+            /*
+             * Check the id is valid guid
+             */ 
+            CheckValidGuid(id);
+            
             await _addressService.DeleteAddress(id);
             return NoContent();
         }
         [HttpPatch("{id}", Name = "Address_Patch")]
         public async Task<IActionResult> Patch(string id, [FromBody]JsonPatchDocument<Address> addressPatch)
         {
-            AddressEntity addressEntity = _addressEntity.SingleOrDefault(a => a.AddressId == Guid.Parse(id));
+            /*
+             * Check the the id is valid guid
+             */ 
+            CheckValidGuid(id);
+            AddressEntity addressEntity = _addressEntity.SingleOrDefault(a => a.AddressUID == Guid.Parse(id));
             Address address = _mapper.Map<Address>(addressEntity);
             addressPatch.ApplyTo(address);
             _mapper.Map(address, addressEntity);
@@ -153,7 +166,17 @@ namespace Titan.Ufc.Addresses.API.Controllers
             await _addressContext.SaveChangesAsync();
             return Ok(address);
         }
-
-       
+        /// <summary>
+        /// Check the requested id is valid guid or not
+        /// </summary>
+        /// <param name="id"></param>
+        private void CheckValidGuid(string id)
+        {
+            Guid yourGuid;
+            if (!Guid.TryParse(id, out yourGuid))
+            {
+                throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Guid_Input_Validation]);
+            }
+        }
     }
 }
