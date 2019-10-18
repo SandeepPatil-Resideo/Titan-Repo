@@ -29,7 +29,7 @@ namespace Titan.Ufc.Addresses.API.Repository
             _addressEntity = _addressContext.Set<AddressEntity>();
             _countryStateEntities = _addressContext.Set<CountryStateEntity>();
             _mapper = mapper;
-        } 
+        }
         /// <summary>
         /// Create the new address in the address
         /// table
@@ -38,11 +38,12 @@ namespace Titan.Ufc.Addresses.API.Repository
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
         {
-
-            var addressObject = _mapper.Map<AddressEntity>(address);
+            var addressObject = _mapper.Map<AddressEntity>(address);            
             await _addressContext.AddAsync(addressObject);
             await _addressContext.SaveChangesAsync();
-            return address;
+            int lastUpdatedAddressId = await _addressContext.Addresses.MaxAsync(x => x.AddressID);
+            var lastUpdatedAddress = await _addressEntity.Where(a => a.AddressID == lastUpdatedAddressId).FirstOrDefaultAsync();
+            return await GetAddressById(Guid.Parse(lastUpdatedAddress.AddressUID.ToString()));
         }
         /// <summary>
         /// Delete the address
@@ -63,10 +64,11 @@ namespace Titan.Ufc.Addresses.API.Repository
         /// <returns></returns>
         public async Task<Address> GetAddressById(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();           
-            return _mapper.Map<Address>(address);
+            var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
+            Address addressDetails = _mapper.Map<Address>(address);
+            addressDetails.StateCode =  _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().AbbreviatedName;
+            return addressDetails;
         }
-
         /// <summary>
         /// Update address entity
         /// </summary>
@@ -81,10 +83,9 @@ namespace Titan.Ufc.Addresses.API.Repository
             addressEntity.AddressLine3 = address.AddressLine3;
             addressEntity.City = address.City;
             addressEntity.CountryCode = address.CountryCode;
-            addressEntity.StateID = address.StateId;
+            addressEntity.StateID = address.StateID;
             addressEntity.ContactName = address.ContactName;
-            addressEntity.PinCode = address.PinCode;
-            addressEntity.IsVerified = address.IsVerified;            
+            addressEntity.PinCode = address.PinCode;                     
             _addressContext.Update(addressEntity);
             await _addressContext.SaveChangesAsync();           
             return await GetAddressById(uniqueAddressId);
@@ -136,6 +137,16 @@ namespace Titan.Ufc.Addresses.API.Repository
                 return -1;
             }
             return stateCodeAvailable.StateId;
+        }
+
+        /// <summary>
+        /// Select the state code      
+        /// </summary>
+        /// <param name="stateID"></param>
+        /// <returns></returns>
+        public async Task<string> GetStateCode(int stateID)
+        {
+            return _countryStateEntities.Where(a => a.StateId == stateID).FirstOrDefault().AbbreviatedName;
         }
     }
 }

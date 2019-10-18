@@ -21,7 +21,7 @@ namespace Titan.Ufc.Addresses.API.Entities
 
         public string CountryCode { get; set; }
 
-        public bool? IsVerified { get; set; }
+        public byte IsVerified { get; set; }
 
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
@@ -29,10 +29,7 @@ namespace Titan.Ufc.Addresses.API.Entities
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
 
-        public decimal? Altitude { get; set; }
-
-        public decimal? Accuracy { get; set; }
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid AddressUID { get; set; }
 
         public string ContactName { get; set; }
@@ -42,8 +39,11 @@ namespace Titan.Ufc.Addresses.API.Entities
     
         public string ContactNumber { get; set; }
 
-        public bool? IsPrimary { get; set; }
+        public bool? isPrimary { get; set; }
 
-        public int Type { get; set; }
+        public byte Type { get; set; }
+
+        
     }
+
 }

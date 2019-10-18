@@ -8,6 +8,7 @@ using Titan.Ufc.Addresses.API.Resources;
 using Titan.Ufc.Addresses.API.Models;
 using Titan.Ufc.Addresses.API.Repository;
 
+
 namespace Titan.Ufc.Addresses.API.Service
 {
     /// <summary>
@@ -49,7 +50,8 @@ namespace Titan.Ufc.Addresses.API.Service
             if(stateId==-1)
             {
                 { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
-            }
+            }            
+            address.StateID = stateId;
             return await _addressRepository.CreateAddress(address);
         }
         /// <summary>

@@ -88,12 +88,12 @@ namespace Titan.Ufc.Addresses.API.Models
         /// Validate and update the status
         /// </summary>
         [JsonProperty("isVerified")]
-        public bool? IsVerified { get; set; }
+        public byte IsVerified { get; set; }
         /// <summary>
         /// Set address primary or not
         /// </summary>
         [JsonProperty("isPrimary")]
-        public bool? IsPrimary { get; set; }
+        public bool? IsPrimary { get; set; } = false;
         /// <summary>
         /// Created date of the address
         /// </summary>
@@ -109,10 +109,10 @@ namespace Titan.Ufc.Addresses.API.Models
         /// Updated date of the address
         /// </summary>
         [JsonProperty("type")]
-        public int Type { get; set; }
+        public byte Type { get; set; }
 
         [JsonIgnore]
-        public int StateId { get; set; }
+        public int StateID { get; set; }
 
 
 

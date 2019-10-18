@@ -19,7 +19,7 @@ namespace Titan.Ufc.Addresses.API.Mapper
         /// </summary>
         public MappingProfile()
         {
-            CreateMap<Address, AddressEntity>();
+            CreateMap<AddressEntity, Address>();
         }
     }
 }
