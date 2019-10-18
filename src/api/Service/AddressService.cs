@@ -92,6 +92,22 @@ namespace Titan.Ufc.Addresses.API.Service
             if (!isAddressAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
 
+            /*
+             * Check the state and country code and state code is available
+             */
+
+            bool countryCodeAvailable = await _addressRepository.CheckCountryCode(address.CountryCode);
+
+            if (!countryCodeAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
+
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if (stateId == -1)
+            {
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }
+            address.StateID = stateId;
+
             return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);            
         }
     }

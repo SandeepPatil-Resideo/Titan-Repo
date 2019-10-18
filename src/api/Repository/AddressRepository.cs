@@ -85,7 +85,15 @@ namespace Titan.Ufc.Addresses.API.Repository
             addressEntity.CountryCode = address.CountryCode;
             addressEntity.StateID = address.StateID;
             addressEntity.ContactName = address.ContactName;
-            addressEntity.PinCode = address.PinCode;                     
+            addressEntity.PinCode = address.PinCode;
+            addressEntity.isPrimary = address.IsPrimary;
+            addressEntity.IsVerified = address.IsVerified;
+            addressEntity.UpdatedDate = DateTime.UtcNow;
+            addressEntity.ContactNumber = address.ContactNumber;
+            addressEntity.Type = address.Type;
+            addressEntity.Latitude = address.Latitude;
+            addressEntity.Longitude = address.Longitude;
+            addressEntity.MailingAddressName = address.MailingAddressName;            
             _addressContext.Update(addressEntity);
             await _addressContext.SaveChangesAsync();           
             return await GetAddressById(uniqueAddressId);
