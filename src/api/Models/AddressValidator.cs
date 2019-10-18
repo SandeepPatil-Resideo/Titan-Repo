@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using Titan.UFC.ExceptionAndValidation;
 using Titan.Ufc.Addresses.API.Helpers;
 using Titan.Ufc.Addresses.API.Resources;
+using System;
 
 namespace Titan.Ufc.Addresses.API.Models
 {
@@ -138,6 +139,23 @@ namespace Titan.Ufc.Addresses.API.Models
            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Country_Code_Is_Required].Value);
 
 
+            RuleFor(m => CheckAddressType(m.Type))
+       .NotEqual(false)
+       .WithErrorCode(ErrorTypes.InvalidNumberError.ToString())
+       .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Type_Invalid]);
+
+
+
+        }
+        private bool CheckAddressType(int type)
+        {
+            bool enumContains = true;
+            if(!Enum.IsDefined(typeof(AddressType), type))
+            {
+                enumContains = false;
+            }
+           
+            return enumContains;
         }
     }
 }

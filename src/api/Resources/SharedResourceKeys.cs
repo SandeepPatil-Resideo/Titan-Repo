@@ -58,12 +58,7 @@ namespace Titan.Ufc.Addresses.API.Resources
 
         public static readonly string Address_Country_Code_Is_Required = "Address_Country_Code_Is_Required";
 
-
-
-
-
-
-
+        public static readonly string Address_Type_Invalid = "Address_Type_Invalid";
 
 
 

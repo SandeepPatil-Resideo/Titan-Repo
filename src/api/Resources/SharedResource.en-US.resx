@@ -213,4 +213,7 @@
   <data name="Address_State_Code_Required" xml:space="preserve">
     <value>STATE_CODE_REQUIRED</value>
   </data>
+  <data name="Address_Type_Invalid" xml:space="preserve">
+    <value>INVALID ADDRESS TYPE</value>
+  </data>
 </root>

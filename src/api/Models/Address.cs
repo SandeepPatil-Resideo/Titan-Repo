@@ -114,7 +114,13 @@ namespace Titan.Ufc.Addresses.API.Models
         [JsonIgnore]
         public int StateID { get; set; }
 
+    }
 
-
+    enum AddressType
+    {
+        Contact = 1,
+        Billing = 2,
+        Shipping = 3,
+        Location = 4     
     }
 }
