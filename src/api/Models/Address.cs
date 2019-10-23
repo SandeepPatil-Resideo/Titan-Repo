@@ -87,7 +87,7 @@ namespace Titan.Ufc.Addresses.API.Models
         /// <summary>
         /// Validate and update the status
         /// </summary>
-        [JsonProperty("isVerified")]
+        [JsonProperty("isValidated")]
         public byte IsVerified { get; set; }
         /// <summary>
         /// Set address primary or not

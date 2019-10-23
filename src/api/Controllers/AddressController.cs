@@ -27,7 +27,7 @@ namespace Titan.Ufc.Addresses.API.Controllers
     /// Address Controller class
     /// to perform the crud operation
     /// </summary>
-    [Route("api/v{version:apiVersion}/Address")]
+    [Route("api/v{version:apiVersion}/Addresses")]
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;

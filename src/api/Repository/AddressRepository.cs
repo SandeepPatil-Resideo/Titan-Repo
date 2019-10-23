@@ -66,7 +66,9 @@ namespace Titan.Ufc.Addresses.API.Repository
         {
             var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
             Address addressDetails = _mapper.Map<Address>(address);
-            addressDetails.StateCode =  _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().AbbreviatedName;
+            string stateCode = _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().AbbreviatedName;
+            string[] sCodeArray = stateCode.Split('-');
+            addressDetails.StateCode = sCodeArray[1];
             return addressDetails;
         }
         /// <summary>
