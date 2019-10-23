@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "address", "src\api\address.csproj", "{83194605-E9FA-431A-8CA2-2CD7961197C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Ufc.Addresses.API", "src\api\Titan.Ufc.Addresses.API.csproj", "{C00C47B8-B849-4861-A44B-60912D5C9CCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{34323F0B-862B-46F7-AD3B-591058B31B47}"
 EndProject
