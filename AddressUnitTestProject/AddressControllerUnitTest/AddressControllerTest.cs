@@ -10,13 +10,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Titan.Common.Diagnostics.State;
+using Titan.Ufc.Addresses.API.Controllers;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.Models;
+using Titan.Ufc.Addresses.API.Resources;
+using Titan.Ufc.Addresses.API.Service;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using TitanTemplate.titanaddressapi.Controllers;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.LocalizationResource;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.Repository;
-using TitanTemplate.titanaddressapi.Service;
 using Xunit;
 
 namespace AddressUnitTestProject.AddressControllerUnitTest
@@ -27,7 +26,7 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
         protected AddressController addressControllerUnderTest { get; }
         protected Mock<ILogger<AddressController>> LoggerMock { get; }
         protected Mock<IAddressService> addressServiceMock { get; }
-        protected Mock<IStringLocalizer<SharedResource>> LocalizerMock { get; }
+        protected Mock<ISharedResource> LocalizerMock { get; }
         protected IMapper mapperMock { get; }
         protected AddressContext addressContextInMemory { get; }
         public AddressControllerTest()
@@ -36,7 +35,7 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
             stateObserverMock = new Mock<IStateObserver>();
             LoggerMock = new Mock<ILogger<AddressController>>();
             addressServiceMock = new Mock<IAddressService>();
-            LocalizerMock = new Mock<IStringLocalizer<SharedResource>>();
+            LocalizerMock = new Mock<ISharedResource>();
             addressControllerUnderTest = new AddressController(addressServiceMock.Object, LocalizerMock.Object, stateObserverMock.Object, mapperMock, addressContextInMemory);
         }
         private static AddressContext GetAddressContextInMemory()

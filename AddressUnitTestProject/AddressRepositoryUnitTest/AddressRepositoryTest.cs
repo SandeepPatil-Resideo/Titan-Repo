@@ -8,11 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.LocalizationResource;
-using TitanTemplate.titanaddressapi.Repository;
 using Xunit;
+using Titan.Ufc.Addresses.API.Repository;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.Resources;
+using Titan.Ufc.Addresses.API.Models;
+
 namespace AddressUnitTestProject.AddressRepositoryUnitTest
 {
     public class AddressRepositoryTest

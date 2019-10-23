@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\api\address.csproj" />
+    <ProjectReference Include="..\src\api\Titan.Ufc.Addresses.API.csproj" />
   </ItemGroup>
 
 </Project>

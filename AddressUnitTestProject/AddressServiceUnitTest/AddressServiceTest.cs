@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.Models;
+using Titan.Ufc.Addresses.API.Repository;
+using Titan.Ufc.Addresses.API.Resources;
+using Titan.Ufc.Addresses.API.Service;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.LocalizationResource;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.Repository;
-using TitanTemplate.titanaddressapi.Service;
 using Xunit;
 
 
@@ -22,13 +22,13 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
         protected Mock<IAddressRepository> addressRepositoryMock { get; }
         protected AddressService addressServiceUnderTest { get; }
         protected Mock<ILogger<AddressService>> LoggerMock { get; }
-        protected Mock<IStringLocalizer<SharedResource>> LocalizerMock { get; }
+        protected Mock<ISharedResource> LocalizerMock { get; }
 
         public AddressServiceTest()
         {
             addressRepositoryMock = new Mock<IAddressRepository>();
             LoggerMock = new Mock<ILogger<AddressService>>();
-            LocalizerMock = new Mock<IStringLocalizer<SharedResource>>();
+            LocalizerMock = new Mock<ISharedResource>();
             addressServiceUnderTest = new AddressService(addressRepositoryMock.Object, LocalizerMock.Object);
         }
         public static Address addressMockData => new Address
