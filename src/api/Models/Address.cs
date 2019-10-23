@@ -21,7 +21,7 @@ namespace Titan.Ufc.Addresses.API.Models
         /// Unique guid to get the address
         /// </summary>
         [JsonProperty("addressUID")]
-        public Guid AddressUID { get; set; }
+        public Guid? AddressUID { get; set; }
         /// <summary>
         /// contactName
         /// </summary>
