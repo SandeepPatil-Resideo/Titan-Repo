@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Diagnostics.EventFlow;
 using System.IO;
 
-namespace TitanTemplate.titanaddressapi
+namespace Titan.Ufc.Addr.API
 {
     public class Program
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TitanTemplate.titanaddressapi.Entities
+namespace Titan.Ufc.Addresses.API.Entities
 {
     [Table("PartnerAddress", Schema = "ADDRESS")]
     public partial class AddressEntity

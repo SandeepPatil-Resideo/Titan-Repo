@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Titan.UFC.ExceptionAndValidation;
-using TitanTemplate.titanaddressapi.Helpers;
-using TitanTemplate.titanaddressapi.LocalizationResource;
+using Titan.Ufc.Addresses.API.Helpers;
+using Titan.Ufc.Addresses.API.Resources;
 
-namespace TitanTemplate.titanaddressapi.Models
+namespace Titan.Ufc.Addresses.API.Models
 {
     /// <summary>
     /// Address Validatior Interface
@@ -19,7 +19,7 @@ namespace TitanTemplate.titanaddressapi.Models
         /// Validation
         /// </summary>
         /// <param name="sharedLocalizer"></param>
-        public AddressValidator(IStringLocalizer<SharedResource> sharedLocalizer) : base()
+        public AddressValidator(ISharedResource sharedLocalizer) : base()
         {
             RuleFor(m => m.AddressLine1)
                .NotEmpty()
@@ -97,26 +97,27 @@ namespace TitanTemplate.titanaddressapi.Models
          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Invalid]);
 
 
-            RuleFor(m => ValidationHelper.CheckMaximumLength(m.StateProvinceRegion, 3))
-              .NotEqual(false)
-              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MaxLength]);
+            RuleFor(m => m.ZipPostalCode)
+            .MinimumLength(5)
+            .WithErrorCode(ErrorTypes.MinLengthError.ToString())
+            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MinLength].Value);
 
-            RuleFor(m => ValidationHelper.CheckMinimumLength(m.StateProvinceRegion,2))
-              .NotEqual(false)
-              .WithErrorCode(ErrorTypes.MinLengthError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MinLength]);
+            RuleFor(m => m.ZipPostalCode)
+           .MaximumLength(10)
+           .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MaxLength].Value);
 
 
-            RuleFor(m => ValidationHelper.CheckMaximumLength(m.ZipPostalCode, 5))
-              .NotEqual(false)
-              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MaxLength]);
+            RuleFor(m => m.StateProvinceRegion)
+            .MinimumLength(2)
+            .WithErrorCode(ErrorTypes.MinLengthError.ToString())
+            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MinLength].Value);
 
-            RuleFor(m => ValidationHelper.CheckMinimumLength(m.ZipPostalCode, 10))
-              .NotEqual(false)
-              .WithErrorCode(ErrorTypes.MinLengthError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MinLength]);
+            RuleFor(m => m.StateProvinceRegion)
+           .MaximumLength(3)
+           .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MaxLength].Value);
+
 
         }
     }

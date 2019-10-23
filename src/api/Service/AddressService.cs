@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using TitanTemplate.titanaddressapi.LocalizationResource;
-using TitanTemplate.titanaddressapi.Models;
-using TitanTemplate.titanaddressapi.Repository;
+using Titan.Ufc.Addresses.API.Resources;
+using Titan.Ufc.Addresses.API.Models;
+using Titan.Ufc.Addresses.API.Repository;
 
-namespace TitanTemplate.titanaddressapi.Service
+namespace Titan.Ufc.Addresses.API.Service
 {
     /// <summary>
     /// Address service to perform the
@@ -17,14 +17,14 @@ namespace TitanTemplate.titanaddressapi.Service
     public class AddressService : BaseService,IAddressService
     {
         private readonly IAddressRepository _addressRepository;
-        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
+        private readonly ISharedResource _sharedLocalizer;
         /// <summary>
         /// Address service constructor to initialize 
         /// the repo and logger dependencies
         /// </summary>
         /// <param name="addressRepository"></param>
         /// <param name="sharedLocalizer"></param>
-        public AddressService(IAddressRepository addressRepository, IStringLocalizer<SharedResource> sharedLocalizer)
+        public AddressService(IAddressRepository addressRepository, ISharedResource sharedLocalizer)
         {
             _addressRepository = addressRepository;
             _sharedLocalizer = sharedLocalizer;

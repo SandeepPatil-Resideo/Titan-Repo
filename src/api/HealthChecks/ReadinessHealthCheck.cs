@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TitanTemplate.titanaddressapi.HealthChecks
+namespace Titan.Ufc.Addresses.API.HealthChecks
 {
     public class ReadinessHealthCheck : IHealthCheck
     {

@@ -3,4 +3,4 @@ WORKDIR /app
 USER root
 COPY --chown=titan:titan published .
 USER titan
-ENTRYPOINT ["dotnet", "address.dll"]
+ENTRYPOINT ["dotnet", "Titan.Ufc.Addresses.API.dll"]

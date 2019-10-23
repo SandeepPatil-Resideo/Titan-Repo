@@ -190,12 +190,15 @@
     <value>POSTALCODE_ACCEPTS_ONLY_ALPHA_NUMERIC_VALUES</value>
   </data>
   <data name="Address_StateCode_MaxLength" xml:space="preserve">
-    <value>ADDRESSCODE_MAXIMUM_LENGTH_ALLOWED_IS_3</value>
+    <value>STATE_CODE_MAXIMUM_LENGTH_ALLOWED_IS_3</value>
   </data>
   <data name="Address_StateCode_MinLength" xml:space="preserve">
-    <value>ADDRESSCODE_MINIIMUM_LENGTH_ALLOWED_IS_2</value>
+    <value>STATE_CODE_MINIIMUM_LENGTH_ALLOWED_IS_2</value>
   </data>
   <data name="Address_StateCode_ValidString" xml:space="preserve">
     <value>INVALID_STATE_CODE</value>
+  </data>
+  <data name="Guid_Input_Validation" xml:space="preserve">
+    <value>PLEASE_GIVE_VALID_GUID</value>
   </data>
 </root>

@@ -3,7 +3,7 @@ using System;
 
 
 
-namespace TitanTemplate.titanaddressapi.Models
+namespace Titan.Ufc.Addresses.API.Models
 {
     /// <summary>
     /// Address model

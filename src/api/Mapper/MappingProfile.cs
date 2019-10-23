@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TitanTemplate.titanaddressapi.Entities;
-using TitanTemplate.titanaddressapi.Models;
+using Titan.Ufc.Addresses.API.Entities;
+using Titan.Ufc.Addresses.API.Models;
 
-namespace TitanTemplate.titanaddressapi.Mapper
+namespace Titan.Ufc.Addresses.API.Mapper
 {
     /// <summary>
     /// Mapping profile class is used

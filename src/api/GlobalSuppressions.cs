@@ -4,5 +4,5 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4581:\"new Guid()\" should not be used", Justification = "<Pending>", Scope = "member", Target = "~P:TitanTemplate.titanaddressapi.Models.Address.UniqueAddressId")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4581:\"new Guid()\" should not be used", Justification = "<Pending>", Scope = "member", Target = "~P:Titan.Ufc.Addresses.API.Models.Titan.Ufc.Addresses.API.UniqueAddressId")]
 

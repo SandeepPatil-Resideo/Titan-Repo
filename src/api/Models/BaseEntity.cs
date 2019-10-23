@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TitanTemplate.titanaddressapi.Models
+namespace Titan.Ufc.Addresses.API.Models
 {
     /// <summary>
     /// Base entity
