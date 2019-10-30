@@ -13,15 +13,15 @@ using Microsoft.Extensions.Localization;
 using Titan.Common.Diagnostics.State;
 using Titan.Common.Services.Auditing.AspNetCore;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using Titan.Ufc.Addresses.API.Diagnostics;
-using Titan.Ufc.Addresses.API.Entities;
-using Titan.Ufc.Addresses.API.Resources;
-using Titan.Ufc.Addresses.API.Models;
-using Titan.Ufc.Addresses.API.Service;
+using Titan.UFC.Addresses.API.Diagnostics;
+using Titan.UFC.Addresses.API.Entities;
+using Titan.UFC.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Titan.Ufc.Addresses.API.Controllers
+namespace Titan.UFC.Addresses.API.Controllers
 {
     /// <summary>
     /// Address Controller class

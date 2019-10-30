@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Titan.Ufc.Addresses.API.Resources
+namespace Titan.UFC.Addresses.API.Resources
 {
     public interface ISharedResource
     {

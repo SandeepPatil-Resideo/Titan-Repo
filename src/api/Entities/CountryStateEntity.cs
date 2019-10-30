@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Titan.Ufc.Addresses.API.Entities
+namespace Titan.UFC.Addresses.API.Entities
 {
     [Table("CountryState", Schema = "dbo")]    
     public partial class CountryStateEntity

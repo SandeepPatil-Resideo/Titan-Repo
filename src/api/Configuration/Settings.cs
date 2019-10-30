@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Titan.Ufc.Addresses.API.Configuration
+namespace Titan.UFC.Addresses.API.Configuration
 {
     public class Settings
     {

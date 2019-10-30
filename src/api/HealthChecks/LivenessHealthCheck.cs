@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Titan.Common.Diagnostics.State;
 
-namespace Titan.Ufc.Addresses.API.HealthChecks
+namespace Titan.UFC.Addresses.API.HealthChecks
 {
     public class LivenessHealthCheck : IHealthCheck
     {

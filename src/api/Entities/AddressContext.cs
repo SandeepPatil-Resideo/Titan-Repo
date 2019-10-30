@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Titan.Ufc.Addresses.API.Entities.Configurations;
+using Titan.UFC.Addresses.API.Entities.Configurations;
 
-namespace Titan.Ufc.Addresses.API.Entities
+namespace Titan.UFC.Addresses.API.Entities
 {
     /// <summary>
     /// Entity context class

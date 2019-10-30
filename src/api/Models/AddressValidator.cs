@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Titan.UFC.ExceptionAndValidation;
-using Titan.Ufc.Addresses.API.Helpers;
-using Titan.Ufc.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Helpers;
+using Titan.UFC.Addresses.API.Resources;
 using System;
 
-namespace Titan.Ufc.Addresses.API.Models
+namespace Titan.UFC.Addresses.API.Models
 {
     /// <summary>
     /// Address Validatior Interface

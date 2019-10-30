@@ -18,18 +18,18 @@ using System.Reflection;
 using Titan.Common.Configuration.ContainerSecrets;
 using Titan.Common.Diagnostics.State;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using Titan.Ufc.Addresses.API.Configuration;
-using Titan.Ufc.Addresses.API.Diagnostics;
-using Titan.Ufc.Addresses.API.Entities;
-using Titan.Ufc.Addresses.API.HealthChecks;
-using Titan.Ufc.Addresses.API.Mapper;
-using Titan.Ufc.Addresses.API.Models;
-using Titan.Ufc.Addresses.API.Repository;
-using Titan.Ufc.Addresses.API.Service;
-using Titan.Ufc.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Configuration;
+using Titan.UFC.Addresses.API.Diagnostics;
+using Titan.UFC.Addresses.API.Entities;
+using Titan.UFC.Addresses.API.HealthChecks;
+using Titan.UFC.Addresses.API.Mapper;
+using Titan.UFC.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Repository;
+using Titan.UFC.Addresses.API.Service;
+using Titan.UFC.Addresses.API.Resources;
 using Honeywell.Security.FrameWork.ReadingConfigurationFile;
 
-namespace Titan.Ufc.Addr.API
+namespace Titan.UFC.Addr.API
 {
     public class Startup
     {
@@ -40,15 +40,16 @@ namespace Titan.Ufc.Addr.API
         public Startup(IHostingEnvironment env, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             //Pull config settings from both appsettings.json and environment variables
-            //var builder = new ConfigurationBuilder()
-            //    .SetBasePath(env.ContentRootPath)
-            //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            //    .AddContainerSecrets() //Load env variables from secrets file
-            //    .AddEnvironmentVariables();
-            //Configuration = builder.Build();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+               .AddJsonFile($"secrets/appsettings.{Assembly.GetEntryAssembly().GetName().Name}.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+               .AddContainerSecrets() //Load env variables from secrets file
+               .AddEnvironmentVariables();
+            Configuration = builder.Build();
 
-           Configuration = configuration;
+            Configuration = configuration;
         }
         public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; private set; }
         public void ConfigureServices(IServiceCollection services)

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Titan.Ufc.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Models;
 
-namespace Titan.Ufc.Addresses.API.Service
+namespace Titan.UFC.Addresses.API.Service
 {
     /// <summary>
     /// Address Interface

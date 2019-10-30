@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Titan.UFC.Common.ExceptionMiddleWare;
-using Titan.Ufc.Addresses.API.Resources;
-using Titan.Ufc.Addresses.API.Models;
-using Titan.Ufc.Addresses.API.Repository;
+using Titan.UFC.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Repository;
 
 
-namespace Titan.Ufc.Addresses.API.Service
+namespace Titan.UFC.Addresses.API.Service
 {
     /// <summary>
     /// Address service to perform the

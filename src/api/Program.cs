@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Diagnostics.EventFlow;
 using System.IO;
 
-namespace Titan.Ufc.Addr.API
+namespace Titan.UFC.Addr.API
 {
     public class Program
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Titan.Ufc.Addresses.API.Entities.Configurations
+namespace Titan.UFC.Addresses.API.Entities.Configurations
 {
     public class CountryStateConfiguration : IEntityTypeConfiguration<CountryStateEntity>
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace Titan.Ufc.Addresses.API.Resources
+namespace Titan.UFC.Addresses.API.Resources
 {
     /// <summary>
     /// Resource keys to find the localization
