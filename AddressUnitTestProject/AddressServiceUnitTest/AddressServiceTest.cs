@@ -33,42 +33,42 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
         }
         public static Address addressMockData => new Address
         {
-            Id = 1,
-            AddressId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            AddressID = 1,
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
-            AddressLine1 = "Address Test Line 1",
-            AddressLine2 = "Address Test Line 2",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
-            ZipPostalCode = "560103",
-            StateProvinceRegion = "29",
+            PinCode = "560103",
+            StateCode = "29",
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
-            IsValidated = true,
+            IsVerified = 1,
             MailingAddressName = "TestName"
         };
 
         public static AddressEntity addressEntityMockData => new AddressEntity
         {
-            ID = 1,
-            AddressId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            AddressID = 1,
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
-            AddressLine1 = "Address Test Line 1",
-            AddressLine2 = "Address Test Line 2",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
-            ZipPostalCode = "560103",
-            StateProvinceRegion = "29",
+            PinCode = "560103",
+            StateID = 29,
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
-            IsValidated = true,
-            CreatedOn = DateTime.Parse("05/08/2019"),
-            UpdatedOn = DateTime.Parse("06/08/2019"),
-            MailingAddressName = "TestName"
+            IsVerified = 1,
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019")
         };
 
         public class Create : AddressServiceTest
@@ -108,9 +108,9 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 var expectedAddressObj = addressMockData;
                 var check_result = true;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
-                addressRepositoryMock.Setup(i => i.CheckAddressId(expectedAddressObj.AddressId)).Returns(Task.FromResult(check_result));
-                addressRepositoryMock.Setup(i => i.UpdateAddress(expectedAddressObj.AddressId, expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
-                var result = await addressServiceUnderTest.UpdateAddress(expectedAddressObj.AddressId.ToString(), expectedAddressObj);
+                addressRepositoryMock.Setup(i => i.CheckAddressId(expectedAddressObj.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.UpdateAddress(expectedAddressObj.AddressUID.Value, expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
+                var result = await addressServiceUnderTest.UpdateAddress(expectedAddressObj.AddressUID.ToString(), expectedAddressObj);
                 Assert.Equal(expectedAddressObj, result);
             }
 
@@ -142,10 +142,10 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 var expectedAddressObj = addressMockData;
                 var check_result = true;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
-                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressId)).Returns(Task.FromResult(check_result));
-                addressRepositoryMock.Setup(i => i.DeleteAddress(addressMockData.AddressId)).Returns(Task.FromResult(expectedAddressObj.Id));
-                var result = await addressServiceUnderTest.DeleteAddress(addressMockData.AddressId.ToString());
-                Assert.Equal(expectedAddressObj.Id, result);
+                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.DeleteAddress(addressMockData.AddressUID.Value)).Returns(Task.FromResult(expectedAddressObj.AddressID));
+                var result = await addressServiceUnderTest.DeleteAddress(addressMockData.AddressUID.Value.ToString());
+                Assert.Equal(expectedAddressObj.AddressID, result);
             }
 
             [Fact]
@@ -156,11 +156,11 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 var invalidAddressId = new Guid(invalidAddressStr);
                 var check_result = false;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
-                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressId)).Returns(Task.FromResult(check_result));
-                addressRepositoryMock.Setup(i => i.DeleteAddress(addressMockData.AddressId)).Returns(Task.FromResult(expectedAddressObj.Id));
+                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.DeleteAddress(addressMockData.AddressUID.Value)).Returns(Task.FromResult(expectedAddressObj.AddressID));
                 try
                 {
-                    var result = await addressServiceUnderTest.DeleteAddress(addressMockData.AddressId.ToString());
+                    var result = await addressServiceUnderTest.DeleteAddress(addressMockData.AddressUID.Value.ToString());
                 }
                 catch (TitanCustomException titanCustomException)
                 {
@@ -178,9 +178,9 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 var expectedAddressObj = addressMockData;
                 var check_result = true;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
-                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressId)).Returns(Task.FromResult(check_result));
-                addressRepositoryMock.Setup(i => i.GetAddressById(addressMockData.AddressId)).Returns(Task.FromResult(expectedAddressObj));
-                var result = await addressServiceUnderTest.GetAddressById(addressMockData.AddressId.ToString());
+                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.GetAddressById(addressMockData.AddressUID.Value)).Returns(Task.FromResult(expectedAddressObj));
+                var result = await addressServiceUnderTest.GetAddressById(addressMockData.AddressUID.Value.ToString());
                 Assert.Equal(expectedAddressObj, result);
             }
 
@@ -192,11 +192,11 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 var invalidAddressId = new Guid(invalidAddressStr);
                 var check_result = false;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
-                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressId)).Returns(Task.FromResult(check_result));
-                addressRepositoryMock.Setup(i => i.GetAddressById(addressMockData.AddressId)).Returns(Task.FromResult(expectedAddressObj));
+                addressRepositoryMock.Setup(i => i.CheckAddressId(addressMockData.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.GetAddressById(addressMockData.AddressUID.Value)).Returns(Task.FromResult(expectedAddressObj));
                 try
                 {
-                    var result = await addressServiceUnderTest.GetAddressById(addressMockData.AddressId.ToString());
+                    var result = await addressServiceUnderTest.GetAddressById(addressMockData.AddressUID.Value.ToString());
                 }
                 catch (TitanCustomException titanCustomException)
                 {

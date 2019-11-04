@@ -61,42 +61,43 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
 
         public static Address addressMockData => new Address
         {
-            Id = 1,
-            AddressId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            AddressID = 1,
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
-            AddressLine1 = "Address Test Line 1",
-            AddressLine2 = "Address Test Line 2",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
-            ZipPostalCode = "560103",
-            StateProvinceRegion = "29",
+            PinCode = "560103",
+            StateCode = "29",
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
-            IsValidated = true,
+            IsVerified = 1,
             MailingAddressName = "TestName"
         };
 
         public static AddressEntity addressEntityMockData => new AddressEntity
         {
-            ID = 1,
-            AddressId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            AddressID = 1,
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
-            AddressLine1 = "Address Test Line 1",
-            AddressLine2 = "Address Test Line 2",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
-            ZipPostalCode = "560103",
-            StateProvinceRegion = "29",
+            PinCode = "560103",
+            StateID = 29,
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
-            IsValidated = true,
-            CreatedOn = DateTime.Parse("05/08/2019"),
-            UpdatedOn = DateTime.Parse("06/08/2019"),
-            MailingAddressName = "TestName"
+            IsVerified = 1,
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019")
+            
         };
 
         public class Get : AddressRepositoryTest
@@ -109,7 +110,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
 
-                var result = await addressRepositoryUndertest.GetAddressById(addressEntityInMemory.AddressId);
+                var result = await addressRepositoryUndertest.GetAddressById(addressEntityInMemory.AddressUID);
                 Assert.Equal(addressMockData, result);
             }
         }
@@ -140,7 +141,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
-                var result = await addressRepositoryUndertest.UpdateAddress(address.AddressId, address);
+                var result = await addressRepositoryUndertest.UpdateAddress(address.AddressUID.Value, address);
                 Assert.Equal(addressMockData, result);
             }
         }
@@ -155,8 +156,8 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
 
-                var result = await addressRepositoryUndertest.DeleteAddress(addressEntityInMemory.AddressId);
-                Assert.Equal(addressMockData.Id, result);
+                var result = await addressRepositoryUndertest.DeleteAddress(addressEntityInMemory.AddressUID);
+                Assert.Equal(addressMockData.AddressID, result);
             }
         }
 
@@ -170,7 +171,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
 
-                var result = await addressRepositoryUndertest.CheckAddressId(addressEntityInMemory.AddressId);
+                var result = await addressRepositoryUndertest.CheckAddressId(addressEntityInMemory.AddressUID);
                 Assert.True(result == true);
             }
         }
