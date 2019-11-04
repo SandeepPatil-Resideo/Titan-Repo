@@ -46,6 +46,18 @@ namespace Titan.Ufc.Addresses.API.Repository
         /// <param name="uniqueAddressId"></param>
         /// <returns></returns>
         Task<bool> CheckAddressId(Guid uniqueAddressId);
+        /// <summary>
+        /// Check the country code
+        /// </summary>
+        /// <param name="countryCode"></param>
+        /// <returns></returns>
+        Task<bool> CheckCountryCode(string countryCode);
+        /// <summary>
+        /// Chek the state code is available
+        /// </summary>
+        /// <param name="stateCode"></param>
+        /// <returns></returns>
+        Task<int> CheckStateCode(string stateCode);
 
     }
 }

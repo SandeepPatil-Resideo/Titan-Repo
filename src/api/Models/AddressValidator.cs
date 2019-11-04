@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using Titan.UFC.ExceptionAndValidation;
 using Titan.Ufc.Addresses.API.Helpers;
 using Titan.Ufc.Addresses.API.Resources;
+using System;
 
 namespace Titan.Ufc.Addresses.API.Models
 {
@@ -21,30 +22,25 @@ namespace Titan.Ufc.Addresses.API.Models
         /// <param name="sharedLocalizer"></param>
         public AddressValidator(ISharedResource sharedLocalizer) : base()
         {
-            RuleFor(m => m.AddressLine1)
+            RuleFor(m => m.Address1)
                .NotEmpty()
                .WithErrorCode(ErrorTypes.RequiredError.ToString())
                .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address1_Required]);
 
-            RuleFor(m => m.AddressLine1)
-              .MaximumLength(90)
+            RuleFor(m => m.Address1)
+              .MaximumLength(100)
               .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address1_MaxLength]);
 
-            RuleFor(m => m.AddressLine2)
+            RuleFor(m => m.Address2)
           .NotEmpty()
           .WithErrorCode(ErrorTypes.RequiredError.ToString())
           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address2_Required]);
-
-            RuleFor(m => m.AddressLine2)
+       
+            RuleFor(m => m.Address2)
           .MaximumLength(100)
           .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
-          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address2_MaxLength]);
-
-            RuleFor(m => m.AddressLine3)
-          .NotEmpty()
-          .WithErrorCode(ErrorTypes.RequiredError.ToString())
-          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address3_Required]);
+          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Address2_MaxLength]);           
 
             RuleFor(m => m.AddressLine3)
           .MaximumLength(100)
@@ -55,6 +51,11 @@ namespace Titan.Ufc.Addresses.API.Models
        .MaximumLength(100)
        .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
        .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Contact_Name_Length]);
+
+            RuleFor(m => ValidationHelper.CheckName(m.ContactName))
+           .NotEqual(false)
+           .WithErrorCode(ErrorTypes.InvalidStringError.ToString())
+           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Contact_Name_Invalid]);
 
             RuleFor(m => m.ContactName)
                .NotEmpty()
@@ -71,20 +72,18 @@ namespace Titan.Ufc.Addresses.API.Models
              .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_MaxLength]);
 
+         
+            RuleFor(m => m.City)
+        .NotEmpty()
+        .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+        .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_Name_Required]);
+
+
             RuleFor(m => ValidationHelper.CheckName(m.City))
               .NotEqual(false)
-              .WithErrorCode(ErrorTypes.RequiredError.ToString())
+              .WithErrorCode(ErrorTypes.InvalidStringError.ToString())
               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_City_Invalid]);
-
-            RuleFor(m => m.Latitude)
-              .NotEmpty()
-              .WithErrorCode(ErrorTypes.RequiredError.ToString())
-              .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Latitude_Required]);
-
-            RuleFor(m => m.Longitude)
-          .NotEmpty()
-          .WithErrorCode(ErrorTypes.RequiredError.ToString())
-          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Required]);
+       
 
             RuleFor(m => ValidationHelper.CheckLatitude(m.Latitude.ToString()))
             .NotEqual(false)
@@ -97,28 +96,66 @@ namespace Titan.Ufc.Addresses.API.Models
          .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Longitude_Invalid]);
 
 
-            RuleFor(m => m.ZipPostalCode)
+            RuleFor(m => m.PinCode)
+        .NotEmpty()
+        .WithErrorCode(ErrorTypes.RequiredError.ToString())
+        .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_Required].Value);
+
+            RuleFor(m => m.PinCode)
             .MinimumLength(5)
             .WithErrorCode(ErrorTypes.MinLengthError.ToString())
             .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MinLength].Value);
 
-            RuleFor(m => m.ZipPostalCode)
+            RuleFor(m => m.PinCode)
            .MaximumLength(10)
            .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_PostalCode_MaxLength].Value);
 
+            RuleFor(m => m.CountryCode)
+         .MaximumLength(2)
+         .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
+         .WithMessage(sharedLocalizer[SharedResourceKeys.Address_CountryCode_MaxLength].Value);
 
-            RuleFor(m => m.StateProvinceRegion)
+            RuleFor(m => m.StateCode)
             .MinimumLength(2)
             .WithErrorCode(ErrorTypes.MinLengthError.ToString())
             .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MinLength].Value);
 
-            RuleFor(m => m.StateProvinceRegion)
+            RuleFor(m => m.StateCode)
            .MaximumLength(3)
            .WithErrorCode(ErrorTypes.MaxLengthError.ToString())
            .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MaxLength].Value);
 
 
+            RuleFor(m => m.StateCode)
+           .NotEmpty()
+           .WithErrorCode(ErrorTypes.RequiredError.ToString())
+           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_State_Code_Required].Value);
+
+           
+            RuleFor(m => m.CountryCode)
+           .NotEmpty()
+           .WithErrorCode(ErrorTypes.RequiredError.ToString())
+           .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Country_Code_Is_Required].Value);
+
+
+            RuleFor(m => CheckAddressType(m.Type))
+       .NotEqual(false)
+       .WithErrorCode(ErrorTypes.InvalidNumberError.ToString())
+       .WithMessage(sharedLocalizer[SharedResourceKeys.Address_Type_Invalid]);
+
+
+
+        }
+        private bool CheckAddressType(int type)
+        {
+            bool enumContains = true;
+            if(!Enum.IsDefined(typeof(AddressType), type))
+            {
+                enumContains = false;
+            }
+           
+            return enumContains;
         }
     }
 }

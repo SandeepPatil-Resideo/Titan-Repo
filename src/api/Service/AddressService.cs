@@ -8,6 +8,7 @@ using Titan.Ufc.Addresses.API.Resources;
 using Titan.Ufc.Addresses.API.Models;
 using Titan.Ufc.Addresses.API.Repository;
 
+
 namespace Titan.Ufc.Addresses.API.Service
 {
     /// <summary>
@@ -36,14 +37,22 @@ namespace Titan.Ufc.Addresses.API.Service
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
         {
-            try
+            /*
+             * Check the state and country code and state code is available
+             */
+
+            bool countryCodeAvailable = await _addressRepository.CheckCountryCode(address.CountryCode);
+
+            if (!countryCodeAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
+
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if(stateId==-1)
             {
-                return await _addressRepository.CreateAddress(address);
-            }
-            catch(ArgumentNullException argumentNullException)
-            {
-                throw argumentNullException;
-            }
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }            
+            address.StateID = stateId;
+            return await _addressRepository.CreateAddress(address);
         }
         /// <summary>
         /// Delete the address information against
@@ -82,6 +91,22 @@ namespace Titan.Ufc.Addresses.API.Service
             bool isAddressAvailable = await _addressRepository.CheckAddressId(Guid.Parse(uniqueAddressId));
             if (!isAddressAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
+
+            /*
+             * Check the state and country code and state code is available
+             */
+
+            bool countryCodeAvailable = await _addressRepository.CheckCountryCode(address.CountryCode);
+
+            if (!countryCodeAvailable)
+            { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
+
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if (stateId == -1)
+            {
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }
+            address.StateID = stateId;
 
             return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);            
         }
