@@ -53,7 +53,9 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             context.Database.EnsureCreated();
 
             AddressEntity addressEntity = addressEntityMockData;
+            CountryStateEntity countryStateEntity = countryStateEntityMockData;
             context.Add<AddressEntity>(addressEntity);
+            context.Add<CountryStateEntity>(countryStateEntity);
             context.SaveChanges();
 
             return context;
@@ -77,7 +79,14 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             IsVerified = 1,
             MailingAddressName = "TestName"
         };
-
+        public static CountryStateEntity countryStateEntityMockData => new CountryStateEntity
+        {
+            CountryCode = "+91",
+            StateId = 29,
+            AbbreviatedName = "Ktk",
+            StateName = "Karnataka",
+            IsEnabled = true
+        };
         public static AddressEntity addressEntityMockData => new AddressEntity
         {
             AddressID = 1,
@@ -173,6 +182,46 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
 
                 var result = await addressRepositoryUndertest.CheckAddressId(addressEntityInMemory.AddressUID);
                 Assert.True(result == true);
+            }
+
+            [Fact]
+            public async void check_if_address_doesnot_exists()
+            {
+                string invalidAddressUID = "00000000-0000-0000-0000-000000000000";
+                var invalidAddressGUID = new Guid(invalidAddressUID);
+                var DbContextInMemory = GetAddressContextInMemory();
+                var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
+                var LoggerMock = new Mock<ILogger<AddressRepository>>();
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
+
+                var result = await addressRepositoryUndertest.CheckAddressId(invalidAddressGUID);
+                Assert.True(result == false);
+            }
+        }
+
+        public class CheckCountryCode : AddressRepositoryTest
+        {
+            [Fact]
+            public async void check_if_country_exists()
+            {
+                var DbContextInMemory = GetAddressContextInMemory();
+                var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
+                var LoggerMock = new Mock<ILogger<AddressRepository>>();
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
+                var result = await addressRepositoryUndertest.CheckCountryCode(addressEntityInMemory.CountryCode);
+                Assert.True(result == true);
+            }
+
+            [Fact]
+            public async void return_false_if_country_doesnot_exists()
+            {
+                string invalidCountryCode = null;
+                var DbContextInMemory = GetAddressContextInMemory();
+                var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
+                var LoggerMock = new Mock<ILogger<AddressRepository>>();
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
+                var result = await addressRepositoryUndertest.CheckCountryCode(invalidCountryCode);
+                Assert.True(result == false);
             }
         }
     }
