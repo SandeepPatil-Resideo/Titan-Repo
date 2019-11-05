@@ -88,7 +88,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
         {
             CountryCode = "+91",
             StateId = 29,
-            AbbreviatedName = "+91-KA",
+            AbbreviatedName = "91-KA",
             StateName = "Karnataka",
             IsEnabled = true
         };
@@ -102,7 +102,6 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
             PinCode = "560103",
-            StateID = 29,
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
@@ -111,8 +110,9 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             MailingAddressName = "TestName",
             CreatedDate = DateTime.Parse("05/08/2019"),
             UpdatedDate = DateTime.Parse("06/08/2019"),
-            isPrimary = true,
-            Type = 1            
+            StateID = 29,
+            Type = 1,
+            isPrimary = true
         };
 
         public class Get : AddressRepositoryTest
@@ -126,8 +126,8 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 mappermock.Setup(x => x.Map<Address>(It.IsAny<AddressEntity>())).Returns(addressMockData);
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, mappermock.Object);
                 
-                var result = await addressRepositoryUndertest.GetAddressById(addressEntityInMemory.AddressUID);
-                Assert.Equal(addressMockData, result);
+                Address result = await addressRepositoryUndertest.GetAddressById(addressEntityInMemory.AddressUID);
+                Assert.Equal(addressMockData.AddressUID, result.AddressUID);
             }
         }
 
@@ -140,8 +140,8 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var DbContextInMemory = GetAddressContextInMemory();
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
-                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
-
+                mappermock.Setup(x => x.Map<AddressEntity>(It.IsAny<Address>())).Returns(addressEntityMockData);
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, mappermock.Object);
                 var result = await addressRepositoryUndertest.CreateAddress(address);
                 Assert.Equal(addressMockData, result);
             }
@@ -156,9 +156,10 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var DbContextInMemory = GetAddressContextInMemory();
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
-                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
+                mappermock.Setup(x => x.Map<Address>(It.IsAny<AddressEntity>())).Returns(addressMockData);
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, mappermock.Object);
                 var result = await addressRepositoryUndertest.UpdateAddress(address.AddressUID.Value, address);
-                Assert.Equal(addressMockData, result);
+                Assert.Equal(addressMockData.AddressUID, result.AddressUID);
             }
         }
 
