@@ -73,18 +73,27 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
             public async void should_create_address()
             {
                 var expectedAddressObj = addressMockData;
+                var check_result = true;
+                var expectedAddressEntityObj = addressEntityMockData;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
                 addressRepositoryMock.Setup(i => i.CreateAddress(expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(expectedAddressObj.CountryCode)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.CheckStateCode(expectedAddressObj.CountryCode + "-" + expectedAddressObj.StateCode)).Returns(Task.FromResult(expectedAddressEntityObj.StateID));
                 Address result = await addressServiceUnderTest.CreateAddress(expectedAddressObj);
                 Assert.Equal(expectedAddressObj, result);
             }
 
-            [Fact]
+
+            /*[Fact] 
             public async void should_not_create_address_if_it_i()
             {
                 var expectedAddressObj = addressMockData;
+                var check_result = true;
+                var expectedAddressEntityObj = addressEntityMockData;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
                 addressRepositoryMock.Setup(i => i.CreateAddress(expectedAddressObj)).Throws(new ArgumentNullException("Address is Null"));
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(expectedAddressObj.CountryCode)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.CheckStateCode(expectedAddressObj.CountryCode + "-" + expectedAddressObj.StateCode)).Returns(Task.FromResult(expectedAddressEntityObj.StateID));
                 try
                 {
                     Address result = await addressServiceUnderTest.CreateAddress(expectedAddressObj);
@@ -92,6 +101,44 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
                 catch (ArgumentNullException argumentNullException)
                 {
                     Assert.IsType<ArgumentNullException>(argumentNullException);
+                }
+            }*/
+
+            [Fact]
+            public async void should_not_create_if_country_code_doesnot_exists()
+            {
+                var invalidCountryCode = "0000";
+                var expectedAddressObj = addressMockData;
+                var check_country_result = false;
+                var LoggerLock = new Mock<ILogger<AddressService>>();
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(invalidCountryCode)).Returns(Task.FromResult(check_country_result));
+                try
+                {
+                    var result = await addressServiceUnderTest.CreateAddress(expectedAddressObj);
+                }
+                catch (TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
+            }
+
+            [Fact]
+            public async void should_not_create_if_state_code_doesnot_exists()
+            {
+                var invalidStateCode = "0000";
+                var expectedInvalidAddressEntityObj = -1;
+                var expectedAddressObj = addressMockData;
+                var check_country_result = true;
+                var LoggerLock = new Mock<ILogger<AddressService>>();
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(expectedAddressObj.StateCode)).Returns(Task.FromResult(check_country_result));
+                addressRepositoryMock.Setup(i => i.CheckStateCode(expectedAddressObj.CountryCode + "-" + invalidStateCode)).Returns(Task.FromResult(expectedInvalidAddressEntityObj));
+                try
+                {
+                    var result = await addressServiceUnderTest.CreateAddress(expectedAddressObj);
+                }
+                catch (TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
                 }
             }
         }
@@ -102,12 +149,57 @@ namespace AddressUnitTestProject.AddressServiceUnitTest
             public async void should_update_address()
             {
                 var expectedAddressObj = addressMockData;
+                var expectedAddressEntityObj = addressEntityMockData;
                 var check_result = true;
                 var LoggerLock = new Mock<ILogger<AddressService>>();
                 addressRepositoryMock.Setup(i => i.CheckAddressId(expectedAddressObj.AddressUID.Value)).Returns(Task.FromResult(check_result));
                 addressRepositoryMock.Setup(i => i.UpdateAddress(expectedAddressObj.AddressUID.Value, expectedAddressObj)).Returns(Task.FromResult(expectedAddressObj));
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(expectedAddressObj.CountryCode)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.CheckStateCode(expectedAddressObj.CountryCode + "-" + expectedAddressObj.StateCode)).Returns(Task.FromResult(expectedAddressEntityObj.StateID));
                 var result = await addressServiceUnderTest.UpdateAddress(expectedAddressObj.AddressUID.ToString(), expectedAddressObj);
                 Assert.Equal(expectedAddressObj, result);
+            }
+
+            [Fact]
+            public async void should_not_update_address_if_countrycode_does_not_exist()
+            {
+                var invalidCountryCode = "0000";
+                var expectedAddressObj = addressMockData;
+                var check_result = true;
+                var check_country_result = false;
+                var LoggerLock = new Mock<ILogger<AddressService>>();
+                addressRepositoryMock.Setup(i => i.CheckAddressId(expectedAddressObj.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(invalidCountryCode)).Returns(Task.FromResult(check_country_result));
+                try
+                {
+                    var result = await addressServiceUnderTest.UpdateAddress(expectedAddressObj.AddressUID.Value.ToString(), expectedAddressObj);
+                }
+                catch (TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
+            }
+
+            [Fact]
+            public async void should_not_update_address_if_statecode_does_not_exist()
+            {
+                var invalidStateCode = "0000";
+                var expectedInvalidAddressEntityObj = -1;
+                var expectedAddressObj = addressMockData;
+                var check_result = true;
+                var check_country_result = true;
+                var LoggerLock = new Mock<ILogger<AddressService>>();
+                addressRepositoryMock.Setup(i => i.CheckAddressId(expectedAddressObj.AddressUID.Value)).Returns(Task.FromResult(check_result));
+                addressRepositoryMock.Setup(i => i.CheckCountryCode(expectedAddressObj.StateCode)).Returns(Task.FromResult(check_country_result));
+                addressRepositoryMock.Setup(i => i.CheckStateCode(expectedAddressObj.CountryCode + "-" + invalidStateCode)).Returns(Task.FromResult(expectedInvalidAddressEntityObj));
+                try
+                {
+                    var result = await addressServiceUnderTest.UpdateAddress(expectedAddressObj.AddressUID.Value.ToString(), expectedAddressObj);
+                }
+                catch (TitanCustomException titanCustomException)
+                {
+                    Assert.IsType<TitanCustomException>(titanCustomException);
+                }
             }
 
             [Fact]
