@@ -84,6 +84,29 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             StateID = 29,
             Type = 1
         };
+
+        public static Address addressMockDataCreate => new Address
+        {
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            ContactName = "Suamnth",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
+            AddressLine3 = "Address Test Line 3",
+            City = "Bangalore",
+            PinCode = "560103",
+            StateCode = "KA",
+            CountryCode = "+91",
+            Latitude = decimal.Parse("17.231"),
+            Longitude = decimal.Parse("78.123"),
+            ContactNumber = "7075808080",
+            IsVerified = 1,
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            IsPrimary = true,
+            StateID = 29,
+            Type = 1
+        };
         public static CountryStateEntity countryStateEntityMockData => new CountryStateEntity
         {
             CountryCode = "+91",
@@ -94,7 +117,28 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
         };
         public static AddressEntity addressEntityMockData => new AddressEntity
         {
-            AddressID = 1,
+            AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+            ContactName = "Suamnth",
+            Address1 = "Address Test Line 1",
+            Address2 = "Address Test Line 2",
+            AddressLine3 = "Address Test Line 3",
+            City = "Bangalore",
+            PinCode = "560103",
+            CountryCode = "+91",
+            Latitude = decimal.Parse("17.231"),
+            Longitude = decimal.Parse("78.123"),
+            ContactNumber = "7075808080",
+            IsVerified = 1,
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            StateID = 29,
+            Type = 1,
+            isPrimary = true
+        };
+
+        public static AddressEntity addressEntityMockDataCreate => new AddressEntity
+        {
             AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
             Address1 = "Address Test Line 1",
@@ -140,10 +184,11 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var DbContextInMemory = GetAddressContextInMemory();
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
-                mappermock.Setup(x => x.Map<AddressEntity>(It.IsAny<Address>())).Returns(addressEntityMockData);
+                mappermock.Setup(x => x.Map<AddressEntity>(It.IsAny<Address>())).Returns(addressEntityMockDataCreate);
+                mappermock.Setup(x => x.Map<Address>(It.IsAny<AddressEntity>())).Returns(addressMockDataCreate);
                 var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, mappermock.Object);
                 var result = await addressRepositoryUndertest.CreateAddress(address);
-                Assert.Equal(addressMockData, result);
+                Assert.Equal(addressMockDataCreate.AddressUID, result.AddressUID);
             }
         }
 
