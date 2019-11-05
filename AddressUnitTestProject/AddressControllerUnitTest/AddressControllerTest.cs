@@ -56,7 +56,6 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
         }
         public static Address addressMockData => new Address
         {
-           
             AddressID = 1,
             AddressUID = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
             ContactName = "Suamnth",
@@ -71,7 +70,12 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
             IsVerified = 1,
-            MailingAddressName = "TestName"
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            IsPrimary = true,
+            StateID = 29,
+            Type = 1
         };
 
         public static AddressEntity addressEntityMockData => new AddressEntity
@@ -92,7 +96,9 @@ namespace AddressUnitTestProject.AddressControllerUnitTest
             IsVerified = 1,
             MailingAddressName = "TestName",
             CreatedDate = DateTime.Parse("05/08/2019"),
-            UpdatedDate = DateTime.Parse("06/08/2019")
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            isPrimary = true,
+            Type = 1
         };
         public class Get : AddressControllerTest
         {

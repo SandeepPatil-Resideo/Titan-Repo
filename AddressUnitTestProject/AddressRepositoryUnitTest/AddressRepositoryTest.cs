@@ -22,6 +22,8 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
         protected IConfiguration ConfigurationMock { get; }
         protected AddressContext addressContextInMemory { get; }
         protected MapperConfiguration MappingConfig { get; }
+        
+        protected Mock<IMapper> mappermock;
         protected IMapper MapperMock { get; }
         protected Mock<ILogger<AddressRepository>> LoggerMock { get; }
         protected Mock<IStringLocalizer<SharedResource>> LocalizerMock { get; }
@@ -31,7 +33,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
 
             LoggerMock = new Mock<ILogger<AddressRepository>>();
             LocalizerMock = new Mock<IStringLocalizer<SharedResource>>();
-
+            mappermock = new Mock<IMapper>();
             var builder = new ConfigurationBuilder()
            .SetBasePath(Directory.GetCurrentDirectory())
            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -39,7 +41,7 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             ConfigurationMock = builder.Build();
 
 
-            addressRepositoryUndertest = new AddressRepository(addressContextInMemory, MapperMock);
+            addressRepositoryUndertest = new AddressRepository(addressContextInMemory, mappermock.Object);
         }
 
         private static AddressContext GetAddressContextInMemory()
@@ -71,19 +73,24 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             AddressLine3 = "Address Test Line 3",
             City = "Bangalore",
             PinCode = "560103",
-            StateCode = "29",
+            StateCode = "KA",
             CountryCode = "+91",
             Latitude = decimal.Parse("17.231"),
             Longitude = decimal.Parse("78.123"),
             ContactNumber = "7075808080",
             IsVerified = 1,
-            MailingAddressName = "TestName"
+            MailingAddressName = "TestName",
+            CreatedDate = DateTime.Parse("05/08/2019"),
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            IsPrimary = true,
+            StateID = 29,
+            Type = 1
         };
         public static CountryStateEntity countryStateEntityMockData => new CountryStateEntity
         {
             CountryCode = "+91",
             StateId = 29,
-            AbbreviatedName = "Ktk",
+            AbbreviatedName = "+91-KA",
             StateName = "Karnataka",
             IsEnabled = true
         };
@@ -105,8 +112,9 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
             IsVerified = 1,
             MailingAddressName = "TestName",
             CreatedDate = DateTime.Parse("05/08/2019"),
-            UpdatedDate = DateTime.Parse("06/08/2019")
-            
+            UpdatedDate = DateTime.Parse("06/08/2019"),
+            isPrimary = true,
+            Type = 1            
         };
 
         public class Get : AddressRepositoryTest
@@ -117,8 +125,9 @@ namespace AddressUnitTestProject.AddressRepositoryUnitTest
                 var DbContextInMemory = GetAddressContextInMemory();
                 var addressEntityInMemory = await DbContextInMemory.Set<AddressEntity>().FirstOrDefaultAsync();
                 var LoggerMock = new Mock<ILogger<AddressRepository>>();
-                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, MapperMock);
-
+                mappermock.Setup(x => x.Map<Address>(It.IsAny<AddressEntity>())).Returns(addressMockData);
+                var addressRepositoryUndertest = new AddressRepository(DbContextInMemory, mappermock.Object);
+                
                 var result = await addressRepositoryUndertest.GetAddressById(addressEntityInMemory.AddressUID);
                 Assert.Equal(addressMockData, result);
             }
