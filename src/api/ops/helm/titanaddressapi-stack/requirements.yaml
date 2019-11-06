@@ -1,7 +1,0 @@
-dependencies:
-  - name: titanaddressapi
-    repository: file://./titanaddressapi
-    version: 0.9.0
-    tags:
-      - titanaddressapi
-  
