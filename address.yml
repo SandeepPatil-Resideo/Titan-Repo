@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: titan-ufc-address-deployment  
+  labels:
+    app: titan-ufc-address
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: titan-ufc-address
+  template:  
+    metadata:
+      name: titan-ufc-address
+      labels:
+        app: titan-ufc-address
+    spec:
+      containers:
+      - name: titan-ufc-address
+        image: <trans_imageRepository_url>/<trans_imagename>:<trans_imagetag>
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: <trans_environmentTag>
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: secrets
+        secret:
+          secretName: <trans_environmentTag>-secrets
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: titan-ufc-address-service
+spec:
+  selector:
+    app: titan-ufc-address
+  ports:
+    - port: 8080
+  type: ClusterIP

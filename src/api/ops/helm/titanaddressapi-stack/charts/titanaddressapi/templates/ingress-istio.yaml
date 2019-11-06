@@ -1,0 +1,25 @@
+{{- if .Values.global.ingress.istio.enabled -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+ name: titanaddressapi-vs
+spec:
+ gateways:
+   - istio-common-gateway.istio-system
+ hosts: 
+   - {{ .Values.ingress.host }}
+ http:
+   -
+     route:
+       -
+         destination:
+           host: titanaddressapi
+           port:
+             number: 5000
+         headers:
+           request:
+             set:
+               X-Forwarded-Host: {{ .Values.ingress.host }}
+               X-Forwarded-Port: "443"
+               X-Forwarded-Proto: https
+{{- end }}

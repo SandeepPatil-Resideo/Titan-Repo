@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: titanaddressapi
+data:
+  OBSERVERSUCCESSES: "{{ .Values.observerSuccesses }}"
+  OBSERVERFAILURES: "{{ .Values.observerFailures }}"
