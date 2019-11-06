@@ -1,17 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29411.108
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.Ufc.Addresses.API", "src\api\Titan.Ufc.Addresses.API.csproj", "{C00C47B8-B849-4861-A44B-60912D5C9CCB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{34323F0B-862B-46F7-AD3B-591058B31B47}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{8CD4787F-575A-4665-852E-F7943C2A814D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddressUnitTest", "AddressUnitTest", "{1B6AC381-FE14-4450-93E2-E8F8D85BC8D5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressUnitTestProject", "AddressUnitTestProject\AddressUnitTestProject.csproj", "{BB1797A2-987F-44FB-8C06-B616C46659BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +14,7 @@ Global
 		{C00C47B8-B849-4861-A44B-60912D5C9CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C00C47B8-B849-4861-A44B-60912D5C9CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C00C47B8-B849-4861-A44B-60912D5C9CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB1797A2-987F-44FB-8C06-B616C46659BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB1797A2-987F-44FB-8C06-B616C46659BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB1797A2-987F-44FB-8C06-B616C46659BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB1797A2-987F-44FB-8C06-B616C46659BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C00C47B8-B849-4861-A44B-60912D5C9CCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
