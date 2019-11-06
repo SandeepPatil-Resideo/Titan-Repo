@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Titan.UFC.ExceptionAndValidation;
 using Titan.UFC.Addresses.API.Helpers;
 using Titan.UFC.Addresses.API.Resources;
@@ -138,10 +138,10 @@ namespace Titan.UFC.Addresses.API.Models
                .WithMessage(sharedLocalizer[SharedResourceKeys.Address_StateCode_MaxLength].Value);
 
 
-            RuleFor(m => m.StateCode)
-               .NotEmpty()
-               .WithErrorCode(ErrorTypes.RequiredError.ToString())
-               .WithMessage(sharedLocalizer[SharedResourceKeys.Address_State_Code_Required].Value);
+            //RuleFor(m => m.StateCode)
+            //   .NotEmpty()
+            //   .WithErrorCode(ErrorTypes.RequiredError.ToString())
+            //   .WithMessage(sharedLocalizer[SharedResourceKeys.Address_State_Code_Required].Value);
 
 
             RuleFor(m => m.CountryCode)
