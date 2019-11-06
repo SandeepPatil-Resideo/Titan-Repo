@@ -49,13 +49,13 @@ namespace Titan.UFC.Addr.API
                .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            Configuration = configuration;
+           // Configuration = configuration;
         }
         public Microsoft.Extensions.Configuration.IConfiguration Configuration { get; private set; }
         public void ConfigureServices(IServiceCollection services)
         {
-            var reader = new ReadingConfiguration();
-            Configuration = reader.ApplyConfigurationFromOrchestrator();
+            //var reader = new ReadingConfiguration();
+            //Configuration = reader.ApplyConfigurationFromOrchestrator();
 
             services.AddOptions();
             services.Configure<Settings>(Configuration);

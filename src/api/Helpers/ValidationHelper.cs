@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Titan.Ufc.Addresses.API.Models;
 
 namespace Titan.UFC.Addresses.API.Helpers
 {
@@ -32,7 +31,7 @@ namespace Titan.UFC.Addresses.API.Helpers
             bool retVal = false;
 
 
-            
+
             var latitudeRegx = @"^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$";
 
             if (!string.IsNullOrEmpty(lalitude))
@@ -91,6 +90,55 @@ namespace Titan.UFC.Addresses.API.Helpers
             }
 
             return retVal;
+        }
+
+        public static bool CheckContactNumberValid(string value)
+        {
+            Regex contactNumber = new Regex(@"^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$");
+            if (!String.IsNullOrEmpty(value.ToString()))
+            {
+                return contactNumber.IsMatch(value.ToString());
+            }
+            return false;
+        }
+
+        public static bool CheckAddressIdValid(Guid? Uuid)
+        {
+            if (Uuid != null)
+            {
+                Regex hexNumber = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
+                if (!String.IsNullOrEmpty(Uuid.ToString()))
+                {
+                    return hexNumber.IsMatch(Uuid.ToString());
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public static bool CheckAddressType(int type)
+        {
+            bool enumContains = true;
+            if (!Enum.IsDefined(typeof(AddressType), type))
+            {
+                enumContains = false;
+            }
+
+            return enumContains;
+        }
+
+        public static bool CheckTypeValues(int value)
+        {
+            if (value <= 4 && value >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

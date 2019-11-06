@@ -60,7 +60,7 @@ namespace Titan.UFC.Addresses.API.Resources
 
         public static readonly string Address_Type_Invalid = "Address_Type_Invalid";
 
-
+        public static readonly string Contact_Number_Invalid = "Contact_Number_Is_Invalid ";
 
         #endregion
     }

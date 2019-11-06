@@ -67,7 +67,7 @@ namespace Titan.UFC.Addresses.API.Models
         /// <summary>
         /// State code like "NY"
         /// </summary>
-        [JsonProperty("stateProvinceRegion")]
+        [JsonProperty("stateProvinceRegionCode")]
         public string StateCode { get; set; }
         /// <summary>
         /// Country code like "USA"
