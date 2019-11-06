@@ -7,11 +7,11 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Titan.Common.Diagnostics.State;
-using Titan.Ufc.Addresses.API.Controllers;
-using Titan.Ufc.Addresses.API.Entities;
-using Titan.Ufc.Addresses.API.Models;
-using Titan.Ufc.Addresses.API.Resources;
-using Titan.Ufc.Addresses.API.Service;
+using Titan.UFC.Addresses.API.Controllers;
+using Titan.UFC.Addresses.API.Entities;
+using Titan.UFC.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Service;
 using Titan.UFC.Common.ExceptionMiddleWare;
 using Xunit;
 

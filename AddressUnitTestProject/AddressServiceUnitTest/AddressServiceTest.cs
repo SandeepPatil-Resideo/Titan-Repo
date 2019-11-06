@@ -2,11 +2,11 @@
 using Moq;
 using System;
 using System.Threading.Tasks;
-using Titan.Ufc.Addresses.API.Entities;
-using Titan.Ufc.Addresses.API.Models;
-using Titan.Ufc.Addresses.API.Repository;
-using Titan.Ufc.Addresses.API.Resources;
-using Titan.Ufc.Addresses.API.Service;
+using Titan.UFC.Addresses.API.Entities;
+using Titan.UFC.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Repository;
+using Titan.UFC.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Service;
 using Titan.UFC.Common.ExceptionMiddleWare;
 using Xunit;
 

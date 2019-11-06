@@ -7,10 +7,10 @@ using Moq;
 using System;
 using System.IO;
 using Xunit;
-using Titan.Ufc.Addresses.API.Repository;
-using Titan.Ufc.Addresses.API.Entities;
-using Titan.Ufc.Addresses.API.Resources;
-using Titan.Ufc.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Repository;
+using Titan.UFC.Addresses.API.Entities;
+using Titan.UFC.Addresses.API.Resources;
+using Titan.UFC.Addresses.API.Models;
 
 namespace AddressUnitTestProject.AddressRepositoryUnitTest
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Titan.Ufc.Addresses.API.Models;
+using Titan.UFC.Addresses.API.Models;
 
 namespace Titan.UFC.Addresses.API.Helpers
 {
