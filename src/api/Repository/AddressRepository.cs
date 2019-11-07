@@ -38,7 +38,7 @@ namespace Titan.UFC.Addresses.API.Repository
         /// <returns></returns>
         public async Task<Address> CreateAddress(Address address)
         {
-            var addressObject = _mapper.Map<AddressEntity>(address);            
+            var addressObject = _mapper.Map<AddressEntity>(address);
             await _addressContext.AddAsync(addressObject);
             await _addressContext.SaveChangesAsync();
             int lastUpdatedAddressId = await _addressContext.Addresses.MaxAsync(x => x.AddressID);
@@ -52,9 +52,9 @@ namespace Titan.UFC.Addresses.API.Repository
         /// <returns></returns>
         public async Task<int> DeleteAddress(Guid uniqueAddressId)
         {
-            var address = await _addressEntity.Where(a=>a.AddressUID== uniqueAddressId).FirstOrDefaultAsync();            
+            var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
             _addressContext.Remove(address);
-             return await _addressContext.SaveChangesAsync();  
+            return await _addressContext.SaveChangesAsync();
         }
         /// <summary>
         /// Get address information from 
@@ -66,9 +66,6 @@ namespace Titan.UFC.Addresses.API.Repository
         {
             var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
             Address addressDetails = _mapper.Map<Address>(address);
-            string stateCode = _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().StateCode;
-            string[] sCodeArray = stateCode.Split('-');
-            addressDetails.StateCode = sCodeArray[1];
             return addressDetails;
         }
         /// <summary>
@@ -79,13 +76,12 @@ namespace Titan.UFC.Addresses.API.Repository
         /// <returns></returns>
         public async Task<Address> UpdateAddress(Guid uniqueAddressId, Address address)
         {
-            var addressEntity = _addressEntity.SingleOrDefault(a => a.AddressUID == uniqueAddressId);            
+            var addressEntity = _addressEntity.SingleOrDefault(a => a.AddressUID == uniqueAddressId);
             addressEntity.Address1 = address.Address1;
             addressEntity.Address2 = address.Address2;
             addressEntity.AddressLine3 = address.AddressLine3;
             addressEntity.City = address.City;
             addressEntity.CountryCode = address.CountryCode;
-            addressEntity.StateID = address.StateID;
             addressEntity.ContactName = address.ContactName;
             addressEntity.PinCode = address.PinCode;
             addressEntity.isPrimary = address.IsPrimary;
@@ -95,9 +91,9 @@ namespace Titan.UFC.Addresses.API.Repository
             addressEntity.Type = address.Type;
             addressEntity.Latitude = address.Latitude;
             addressEntity.Longitude = address.Longitude;
-            addressEntity.MailingAddressName = address.MailingAddressName;            
+            addressEntity.MailingAddressName = address.MailingAddressName;
             _addressContext.Update(addressEntity);
-            await _addressContext.SaveChangesAsync();           
+            await _addressContext.SaveChangesAsync();
             return await GetAddressById(uniqueAddressId);
         }
 
@@ -139,24 +135,16 @@ namespace Titan.UFC.Addresses.API.Repository
         /// </summary>
         /// <param name="stateCode"></param>
         /// <returns></returns>
-        public async Task<int> CheckStateCode(string stateCode)
+        public async Task<string> CheckStateCode(string stateCode)
         {
             var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
             if (stateCodeAvailable == null)
             {
-                return -1;
+                return "";
             }
-            return stateCodeAvailable.StateId;
+            return stateCodeAvailable.StateCode;
         }
 
-        /// <summary>
-        /// Select the state code      
-        /// </summary>
-        /// <param name="stateID"></param>
-        /// <returns></returns>
-        public async Task<string> GetStateCode(int stateID)
-        {
-            return _countryStateEntities.Where(a => a.StateId == stateID).FirstOrDefault().StateCode;
-        }
+       
     }
 }

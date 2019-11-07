@@ -6,8 +6,7 @@ namespace Titan.UFC.Addresses.API.Entities
     [Table("vw_States", Schema = "dbo")]    
     public partial class CountryStateEntity
     {
-        [Key]
-        public int StateId { get; set; }
+        
         /// <summary>
         /// Country code
         /// </summary>
@@ -19,11 +18,9 @@ namespace Titan.UFC.Addresses.API.Entities
         /// <summary>
         /// State code
         /// </summary>
+        [Key]
         public string StateCode { get; set; }
-        /// <summary>
-        /// Status
-        /// </summary>
-        public bool IsEnabled { get; set; }
+       
 
     }
 }
