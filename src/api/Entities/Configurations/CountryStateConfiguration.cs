@@ -12,10 +12,10 @@ namespace Titan.UFC.Addresses.API.Entities.Configurations
         public void Configure(EntityTypeBuilder<CountryStateEntity> builder)
         {
             
-            builder.ToTable("CountryState", "dbo");
+            builder.ToTable("vw_States", "dbo");
             builder.Property(e => e.StateName).HasMaxLength(50);
             builder.Property(e => e.CountryCode).HasMaxLength(2);
-            builder.Property(e => e.AbbreviatedName).HasMaxLength(2);
+            builder.Property(e => e.StateCode).HasMaxLength(2);
 
 
         }

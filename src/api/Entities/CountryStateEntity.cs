@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Titan.UFC.Addresses.API.Entities
 {
-    [Table("CountryState", Schema = "dbo")]    
+    [Table("vw_States", Schema = "dbo")]    
     public partial class CountryStateEntity
     {
         [Key]
@@ -19,7 +19,7 @@ namespace Titan.UFC.Addresses.API.Entities
         /// <summary>
         /// State code
         /// </summary>
-        public string AbbreviatedName { get; set; }
+        public string StateCode { get; set; }
         /// <summary>
         /// Status
         /// </summary>

@@ -66,7 +66,7 @@ namespace Titan.UFC.Addresses.API.Repository
         {
             var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
             Address addressDetails = _mapper.Map<Address>(address);
-            string stateCode = _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().AbbreviatedName;
+            string stateCode = _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().StateCode;
             string[] sCodeArray = stateCode.Split('-');
             addressDetails.StateCode = sCodeArray[1];
             return addressDetails;
@@ -141,7 +141,7 @@ namespace Titan.UFC.Addresses.API.Repository
         /// <returns></returns>
         public async Task<int> CheckStateCode(string stateCode)
         {
-            var stateCodeAvailable = await _countryStateEntities.Where(a => a.AbbreviatedName == stateCode).SingleOrDefaultAsync();
+            var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
             if (stateCodeAvailable == null)
             {
                 return -1;
@@ -156,7 +156,7 @@ namespace Titan.UFC.Addresses.API.Repository
         /// <returns></returns>
         public async Task<string> GetStateCode(int stateID)
         {
-            return _countryStateEntities.Where(a => a.StateId == stateID).FirstOrDefault().AbbreviatedName;
+            return _countryStateEntities.Where(a => a.StateId == stateID).FirstOrDefault().StateCode;
         }
     }
 }
