@@ -43,11 +43,11 @@ namespace Titan.UFC.Addresses.API.Service
             if (!countryCodeAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
 
-            string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
-            if (checkStateCode == "")
-            {
-                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
-            }
+            //string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
+            //if (checkStateCode == "")
+            //{
+            //    { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            //}
             return await _addressRepository.CreateAddress(address);
         }
         /// <summary>
@@ -97,11 +97,11 @@ namespace Titan.UFC.Addresses.API.Service
             if (!countryCodeAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
 
-            string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
-            if (checkStateCode == "")
-            {
-                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
-            }
+            //string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
+            //if (checkStateCode == "")
+            //{
+            //    { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            //}
 
             return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);
         }

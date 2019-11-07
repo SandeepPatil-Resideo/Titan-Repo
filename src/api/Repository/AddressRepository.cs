@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Titan.UFC.Common.ExceptionMiddleWare;
 using Titan.UFC.Addresses.API.Entities;
 using Titan.UFC.Addresses.API.Models;
 
@@ -135,15 +133,15 @@ namespace Titan.UFC.Addresses.API.Repository
         /// </summary>
         /// <param name="stateCode"></param>
         /// <returns></returns>
-        public async Task<string> CheckStateCode(string stateCode)
-        {
-            var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
-            if (stateCodeAvailable == null)
-            {
-                return "";
-            }
-            return stateCodeAvailable.StateCode;
-        }
+        //public async Task<string> CheckStateCode(string stateCode)
+        //{
+        //    var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
+        //    if (stateCodeAvailable == null)
+        //    {
+        //        return "";
+        //    }
+        //    return stateCodeAvailable.StateCode;
+        //}
 
        
     }
