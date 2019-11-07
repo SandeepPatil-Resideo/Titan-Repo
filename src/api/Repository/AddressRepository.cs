@@ -64,6 +64,9 @@ namespace Titan.UFC.Addresses.API.Repository
         {
             var address = await _addressEntity.Where(a => a.AddressUID == uniqueAddressId).FirstOrDefaultAsync();
             Address addressDetails = _mapper.Map<Address>(address);
+            string stateCode = _countryStateEntities.Where(a => a.StateId == addressDetails.StateID).FirstOrDefault().StateCode;
+            string[] sCodeArray = stateCode.Split('-');
+            addressDetails.StateCode = sCodeArray[1];
             return addressDetails;
         }
         /// <summary>
@@ -80,6 +83,7 @@ namespace Titan.UFC.Addresses.API.Repository
             addressEntity.AddressLine3 = address.AddressLine3;
             addressEntity.City = address.City;
             addressEntity.CountryCode = address.CountryCode;
+            addressEntity.StateID = address.StateID;
             addressEntity.ContactName = address.ContactName;
             addressEntity.PinCode = address.PinCode;
             addressEntity.isPrimary = address.IsPrimary;
@@ -133,16 +137,24 @@ namespace Titan.UFC.Addresses.API.Repository
         /// </summary>
         /// <param name="stateCode"></param>
         /// <returns></returns>
-        //public async Task<string> CheckStateCode(string stateCode)
-        //{
-        //    var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
-        //    if (stateCodeAvailable == null)
-        //    {
-        //        return "";
-        //    }
-        //    return stateCodeAvailable.StateCode;
-        //}
+        public async Task<int> CheckStateCode(string stateCode)
+        {
+            var stateCodeAvailable = await _countryStateEntities.Where(a => a.StateCode == stateCode).SingleOrDefaultAsync();
+            if (stateCodeAvailable == null)
+            {
+                return -1;
+            }
+            return stateCodeAvailable.StateId;
+        }
 
-       
+        /// <summary>
+        /// Select the state code      
+        /// </summary>
+        /// <param name="stateID"></param>
+        /// <returns></returns>
+        public async Task<string> GetStateCode(int stateID)
+        {
+            return _countryStateEntities.Where(a => a.StateId == stateID).FirstOrDefault().StateCode;
+        }
     }
 }

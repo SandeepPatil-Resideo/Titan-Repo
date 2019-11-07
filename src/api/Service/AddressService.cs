@@ -12,7 +12,7 @@ namespace Titan.UFC.Addresses.API.Service
     /// Address service to perform the
     /// address business validation
     /// </summary>
-    public class AddressService : BaseService, IAddressService
+    public class AddressService : BaseService,IAddressService
     {
         private readonly IAddressRepository _addressRepository;
         private readonly ISharedResource _sharedLocalizer;
@@ -43,11 +43,12 @@ namespace Titan.UFC.Addresses.API.Service
             if (!countryCodeAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
 
-            //string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
-            //if (checkStateCode == "")
-            //{
-            //    { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
-            //}
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if(stateId==-1)
+            {
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }            
+            address.StateID = stateId;
             return await _addressRepository.CreateAddress(address);
         }
         /// <summary>
@@ -59,7 +60,7 @@ namespace Titan.UFC.Addresses.API.Service
         public async Task<int> DeleteAddress(string uniqueAddressId)
         {
             bool isAddressAvailable = await _addressRepository.CheckAddressId(Guid.Parse(uniqueAddressId));
-            if (!isAddressAvailable)
+            if(!isAddressAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Id_NotFound]); }
             return await _addressRepository.DeleteAddress(Guid.Parse(uniqueAddressId));
         }
@@ -97,13 +98,14 @@ namespace Titan.UFC.Addresses.API.Service
             if (!countryCodeAvailable)
             { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_Country_Code_Not_Exist]); }
 
-            //string checkStateCode = await _addressRepository.CheckStateCode(address.StateCode);
-            //if (checkStateCode == "")
-            //{
-            //    { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
-            //}
+            int stateId = await _addressRepository.CheckStateCode(address.CountryCode + "-" + address.StateCode);
+            if (stateId == -1)
+            {
+                { throw new TitanCustomException(_sharedLocalizer[SharedResourceKeys.Address_State_Code_Not_Exist]); }
+            }
+            address.StateID = stateId;
 
-            return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);
+            return await _addressRepository.UpdateAddress(Guid.Parse(uniqueAddressId), address);            
         }
     }
 }

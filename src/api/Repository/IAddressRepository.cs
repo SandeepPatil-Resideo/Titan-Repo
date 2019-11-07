@@ -55,7 +55,7 @@ namespace Titan.UFC.Addresses.API.Repository
         /// </summary>
         /// <param name="stateCode"></param>
         /// <returns></returns>
-       // Task<string> CheckStateCode(string stateCode);
+        Task<int> CheckStateCode(string stateCode);
 
     }
 }

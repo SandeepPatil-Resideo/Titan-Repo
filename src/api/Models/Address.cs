@@ -8,13 +8,13 @@ namespace Titan.UFC.Addresses.API.Models
     /// <summary>
     /// Address model
     /// </summary>
-
+    
     public class Address
     {
         /// <summary>
         /// Primary key of the user address
         /// </summary>
-        [JsonProperty("addressId")]
+        [JsonProperty("addressId")]   
         [JsonIgnore]
         public int AddressID { get; set; }
         /// <summary>
@@ -111,6 +111,9 @@ namespace Titan.UFC.Addresses.API.Models
         [JsonProperty("type")]
         public byte Type { get; set; }
 
+        [JsonIgnore]
+        public int StateID { get; set; }
+
     }
 
     enum AddressType
@@ -118,6 +121,6 @@ namespace Titan.UFC.Addresses.API.Models
         Contact = 1,
         Billing = 2,
         Shipping = 3,
-        Location = 4
+        Location = 4     
     }
 }
